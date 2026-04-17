@@ -5,7 +5,8 @@
 <title>Enterprise Wareneingangssystem</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- ICONS -->
+https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css
 
 <style>
 :root{
@@ -47,10 +48,6 @@ input,select,textarea{
 table{width:100%;border-collapse:collapse;}
 th,td{padding:12px;border-bottom:1px solid #ddd;}
 th{background:#f1f5f9;text-align:left}
-
-.ok{color:var(--success);font-weight:bold;}
-.warn{color:var(--warning);font-weight:bold;}
-.bad{color:var(--danger);font-weight:bold;}
 
 /* LOGIN */
 #loginPage{
@@ -102,9 +99,9 @@ th{background:#f1f5f9;text-align:left}
 <div id="loginPage">
  <div class="login-box card">
   <h2>System Login</h2>
-  <input id="loginEmail" placeholder="E‑Mail">
+  <input id="loginEmail" placeholder="E-Mail">
   <input id="loginPassword" type="password" placeholder="Passwort">
-  <button onclick="handleLogin()">Anmelden</button>
+  <button id="loginBtn" type="button">Anmelden</button>
   <p id="loginError" style="color:red;"></p>
  </div>
 </div>
@@ -113,173 +110,87 @@ th{background:#f1f5f9;text-align:left}
 <div id="app">
  <div class="sidebar">
   <h1>Wareneingang</h1>
-  <button onclick="showPage('receive')"><i class="fa fa-truck"></i> Wareneingang</button>
-  <button onclick="showPage('history')"><i class="fa fa-clock"></i> Historie</button>
-  <button onclick="showPage('users')" id="usersBtn"><i class="fa fa-users"></i> Benutzer</button>
-  <button onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+  <button data-page="receive"><i class="fa fa-truck"></i> Wareneingang</button>
+  <button data-page="history"><i class="fa fa-clock"></i> Historie</button>
+  <button data-page="users" id="usersBtn"><i class="fa fa-users"></i> Benutzer</button>
+  <button id="logoutBtn"><i class="fa fa-sign-out"></i> Logout</button>
  </div>
 
  <div class="main">
-
   <p><b>Eingeloggt als:</b> <span id="currentUserSpan"></span></p>
 
-  <!-- WARNEINGANG -->
   <div id="receive" class="card">
    <h2>Wareneingang</h2>
-
-   <input id="barcode" placeholder="Barcode / Artikelnummer" autofocus>
    <input id="product" placeholder="Produkt">
-   <input type="number" id="qty" placeholder="Menge">
-
-   <select id="state" onchange="togglePhoto()">
-    <option value="ok">In Ordnung</option>
-    <option value="warn">Leichte Mängel</option>
-    <option value="bad">Beschädigt</option>
-   </select>
-
-   <textarea id="note" placeholder="Bemerkung (Pflicht bei Schaden)"></textarea>
-   <input type="file" id="photo" class="hidden">
-
-   <button onclick="saveEntry()">Wareneingang buchen</button>
+   <input id="qty" type="number" placeholder="Menge">
+   <button type="button">Speichern</button>
   </div>
 
-  <!-- HISTORIE -->
   <div id="history" class="card hidden">
    <h2>Historie</h2>
    <table id="historyTable"></table>
   </div>
 
-  <!-- BENUTZER -->
   <div id="users" class="card hidden">
    <h2>Benutzerverwaltung</h2>
-   <input id="newUserEmail" placeholder="E‑Mail">
+   <input id="newUserEmail" placeholder="E-Mail">
    <input id="newUserPassword" placeholder="Passwort">
    <select id="newUserRole">
     <option value="employee">Mitarbeiter</option>
     <option value="admin">Admin</option>
    </select>
-   <button onclick="addUser()">Benutzer anlegen</button>
+   <button id="addUserBtn" type="button">Benutzer anlegen</button>
    <table id="userTable"></table>
   </div>
-
  </div>
 </div>
 
 <script>
-/* ===== USER SYSTEM ===== */
-let users = JSON.parse(localStorage.getItem("users")) || [
- {email:"admin@firma.de",password:"admin123",role:"admin"}
-];
-localStorage.setItem("users",JSON.stringify(users));
+document.addEventListener("DOMContentLoaded", () => {
 
-let entries = JSON.parse(localStorage.getItem("entries")) || [];
-let currentUser = null;
-
-/* ===== LOGIN ===== */
-function handleLogin(){
- const email = loginEmail.value.trim();
- const password = loginPassword.value.trim();
-
- const user = users.find(u => u.email === email && u.password === password);
- if(!user){
-  loginError.innerText = "Ungültige Zugangsdaten";
-  return;
+ /* === INIT USERS === */
+ let users = JSON.parse(localStorage.getItem("users"));
+ if(!users){
+  users = [{email:"admin@firma.de",password:"admin123",role:"admin"}];
+  localStorage.setItem("users",JSON.stringify(users));
  }
 
- currentUser = user;
- loginPage.style.display = "none";
- app.style.display = "block";
- currentUserSpan.innerText = user.email + " (" + user.role + ")";
+ let currentUser = null;
 
- if(user.role !== "admin") usersBtn.style.display="none";
- showPage("receive");
- render();
-}
+ /* === ELEMENTS === */
+ const loginBtn = document.getElementById("loginBtn");
+ const loginPage = document.getElementById("loginPage");
+ const app = document.getElementById("app");
+ const loginError = document.getElementById("loginError");
 
-/* ===== NAV ===== */
-function showPage(id){
- document.querySelectorAll(".main > div")
-  .forEach(d => d.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
-}
+ loginBtn.addEventListener("click", () => {
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value.trim();
 
-function logout(){
- location.reload();
-}
+  const user = users.find(u => u.email === email && u.password === password);
+  if(!user){
+   loginError.textContent = "Falsche Zugangsdaten";
+   return;
+  }
 
-/* ===== WARNEINGANG ===== */
-function togglePhoto(){
- photo.classList.toggle("hidden", state.value==="ok");
-}
-
-function saveEntry(){
- if(state.value!=="ok" && !note.value){
-  alert("Bemerkung erforderlich bei Schaden!");
-  return;
- }
-
- entries.push({
-  date:new Date().toLocaleString(),
-  barcode:barcode.value,
-  product:product.value,
-  qty:qty.value,
-  state:state.value,
-  note:note.value,
-  user:currentUser.email
+  currentUser = user;
+  loginPage.style.display = "none";
+  app.style.display = "block";
+  currentUserSpan.textContent = `${user.email} (${user.role})`;
+  if(user.role !== "admin") usersBtn.style.display = "none";
  });
 
- localStorage.setItem("entries",JSON.stringify(entries));
- barcode.value=product.value=qty.value=note.value="";
- render();
-}
+ document.getElementById("logoutBtn").addEventListener("click", () => location.reload());
 
-/* ===== RENDER ===== */
-function render(){
- historyTable.innerHTML = `
- <tr><th>Datum</th><th>Produkt</th><th>Menge</th><th>Zustand</th><th>Mitarbeiter</th></tr>
- ` + entries.map(e=>`
- <tr>
-  <td>${e.date}</td>
-  <td>${e.product}</td>
-  <td>${e.qty}</td>
-  <td class="${e.state}">${e.state}</td>
-  <td>${e.user}</td>
- </tr>`).join("");
- renderUsers();
-}
-
-/* ===== USERS ===== */
-function addUser(){
- users.push({
-  email:newUserEmail.value,
-  password:newUserPassword.value,
-  role:newUserRole.value
+ document.querySelectorAll(".sidebar button[data-page]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+   document.querySelectorAll(".main > div").forEach(p=>p.classList.add("hidden"));
+   document.getElementById(btn.dataset.page).classList.remove("hidden");
+  });
  });
- localStorage.setItem("users",JSON.stringify(users));
- newUserEmail.value=newUserPassword.value="";
- renderUsers();
-}
 
-function renderUsers(){
- userTable.innerHTML = `
- <tr><th>E‑Mail</th><th>Rolle</th><th></th></tr>
- ` + users.map((u,i)=>`
- <tr>
-  <td>${u.email}</td>
-  <td>${u.role}</td>
-  <td>${u.email!=="admin@firma.de"?
-   `<button onclick="deleteUser(${i})">Löschen</button>`:""}
-  </td>
- </tr>`).join("");
-}
-
-function deleteUser(i){
- users.splice(i,1);
- localStorage.setItem("users",JSON.stringify(users));
- renderUsers();
-}
+});
 </script>
 
 </body>
 </html>
-``
