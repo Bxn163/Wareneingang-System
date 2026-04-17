@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Enterprise Wareneingangssystem</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+ --primary:#1f2937;
+ --secondary:#2563eb;
+ --success:#16a34a;
+ --warning:#f59e0b;
+ --danger:#dc2626;
+ --bg:#f4f6f9;
+}
+
+*{box-sizing:border-box;font-family:"Segoe UI",system-ui;}
+body{margin:0;background:var(--bg);}
+
+/* LOGIN */
+#login{height:100vh;display:flex;align-items:center;justify-content:center;}
+.login-box{
+ background:white;width:380px;padding:40px;border-radius:14px;
+ box-shadow:0 30px 50px rgba(0,0,0,.25);
+}
+.login-box h2{text-align:center;margin-bottom:30px;}
+.login-box input,button{
+ width:100%;padding:14px;margin-bottom:15px;
+ border-radius:8px;border:1px solid #ccc;
+}
+button{
+ background:var(--secondary);
+ color:white;font-size:16px;border:none;cursor:pointer;
+}
+
+/* APP */
+#app{display:none;}
+.sidebar{
+ width:260px;height:100vh;position:fixed;
+ background:var(--primary);color:white;padding:20px;
+}
+.sidebar h1{font-size:20px;margin-bottom:30px;}
+.sidebar button{
+ width:100%;padding:14px;margin-bottom:10px;
+ background:none;border:none;color:white;text-align:left;
+ border-radius:8px;cursor:pointer;
+}
+.sidebar button:hover{background:rgba(255,255,255,.15);}
+
+.main{margin-left:280px;padding:30px;}
+
+.card{
+ background:white;padding:24px;border-radius:14px;
+ box-shadow:0 15px 30px rgba(0,0,0,.1);
+ margin-bottom:20px;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:20px;
+}
+
+label{font-weight:600;}
+input,select,textarea{
+ width:100%;padding:12px;margin-top:6px;margin-bottom:12px;
+}
+textarea{resize:none;height:70px;}
+
+.stat{font-size:28px;font-weight:bold;}
+
+table{width:100%;border-collapse:collapse;}
+th,td{padding:12px;border-bottom:1px solid #ddd;}
+th{background:#f1f5f9;text-align:left;}
+
+.ok{color:var(--success);font-weight:bold;}
+.warn{color:var(--warning);font-weight:bold;}
+.bad{color:var(--danger);font-weight:bold;}
+
+.hidden{display:none;}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <h2>Unternehmenslogin</h2>
+    <input id="email" placeholder="E-Mail">
+    <input id="password" type="password" placeholder="Passwort">
+    <button onclick="login()">Anmelden</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="sidebar">
+    <h1>Wareneingang</h1>
+    <button onclick="show('receive')"><i class="fa fa-box"></i> Wareneingang</button>
+    <button onclick="show('dashboard')"><i class="fa fa-chart-bar"></i> Dashboard</button>
+    <button onclick="show('history')"><i class="fa fa-clock"></i> Historie</button>
+    <button onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
+  </div>
+
+  <div class="main">
+
+<!-- WARNEINGANG -->
+<div id="receive">
+  <div class="card">
+    <h2>Wareneingang erfassen</h2>
+
+    <label>Barcode / Artikelnummer (Scanner)</label>
+    <input id="barcode" autofocus>
+
+    <label>Lieferant</label>
+    <select id="supplier">
+      <option>Amazon Logistics</option>
+      <option>DHL Freight</option>
+      <option>DB Schenker</option>
+      <option>Interner Zulieferer</option>
+    </select>
+
+    <label>Lieferscheinnummer</label>
+    <input id="delivery">
+
+    <label>Produkt / Artikel</label>
+    <input id="product">
+
+    <label>Angelieferte Menge</label>
+    <input type="number" id="qty">
+
+    <label>Zustand</label>
+    <select id="state" onchange="checkState()">
+      <option value="ok">In Ordnung</option>
+      <option value="warn">Leichte Mängel</option>
+      <option value="bad">Beschädigt</option>
+    </select>
+
+    <label>Bemerkung (Pflicht bei Schaden)</label>
+    <textarea id="note"></textarea>
+
+    <button onclick="save()">Wareneingang buchen</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <div class="grid">
+    <div class="card"><p>Wareneingänge</p><div id="count" class="stat">0</div></div>
+    <div class="card"><p>Gesamtmenge</p><div id="sum" class="stat">0</div></div>
+    <div class="card"><p>Beschädigt</p><div id="damaged" class="stat">0</div></div>
+  </div>
+</div>
+
+<!-- HISTORIE -->
+<div id="history" class="hidden">
+  <div class="card">
+    <h2>Wareneingangshistorie</h2>
+    <table id="table"></table>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+let entries = JSON.parse(localStorage.getItem("entries")) || [];
+
+function login(){
+ if(email.value && password.value){
+  login.style.display="none";
+  app.style.display="block";
+  render();
+ }
+}
+
+function logout(){location.reload();}
+
+function show(id){
+ document.querySelectorAll(".main>div").forEach(d=>d.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+}
+
+function checkState(){
+ if(state.value!=="ok" && !note.value){
+  note.placeholder="Bitte Schaden oder Abweichung beschreiben!";
+ }
+}
+
+function save(){
+ if((state.value!=="ok") && !note.value){
+  alert("Bemerkung bei Schaden Pflicht!");
+  return;
+ }
+
+ entries.push({
+  date:new Date().toLocaleString(),
+  barcode:barcode.value,
+  supplier:supplier.value,
+  product:product.value,
+  qty:+qty.value,
+  state:state.value,
+  note:note.value,
+  user:email.value
+ });
+
+ localStorage.setItem("entries",JSON.stringify(entries));
+ barcode.value=delivery.value=product.value=qty.value=note.value="";
+ render();
+ alert("Wareneingang erfolgreich gebucht");
+}
+
+function render(){
+ let rows="<tr><th>Datum</th><th>Produkt</th><th>Menge</th><th>Zustand</th><th>Mitarbeiter</th></tr>";
+ let sum=0,dam=0;
+
+ entries.forEach(e=>{
+  sum+=e.qty;
+  if(e.state==="bad")dam++;
+  rows+=`<tr>
+    <td>${e.date}</td>
+    <td>${e.product}</td>
+    <td>${e.qty}</td>
+    <td class="${e.state}">${e.state}</td>
+    <td>${e.user}</td>
+  </tr>`;
+ });
+
+ table.innerHTML=rows;
+ count.innerText=entries.length;
+ sum.innerText=sum;
+ damaged.innerText=dam;
+}
+</script>
+
+</body>
+</html>
