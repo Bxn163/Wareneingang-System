@@ -5,7 +5,7 @@
 <title>Enterprise Wareneingangssystem</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 :root{
@@ -48,13 +48,18 @@ table{width:100%;border-collapse:collapse;}
 th,td{padding:12px;border-bottom:1px solid #ddd;}
 th{background:#f1f5f9;text-align:left}
 
+.ok{color:var(--success);font-weight:bold;}
+.warn{color:var(--warning);font-weight:bold;}
+.bad{color:var(--danger);font-weight:bold;}
+
 /* LOGIN */
-#login{
+#loginPage{
  height:100vh;
  display:flex;
- justify-content:center;
  align-items:center;
+ justify-content:center;
 }
+
 .login-box{
  width:380px;
  padding:40px;
@@ -88,23 +93,19 @@ th{background:#f1f5f9;text-align:left}
  margin-left:280px;
  padding:30px;
 }
-
-.stat{font-size:30px;font-weight:bold;}
-.ok{color:var(--success);font-weight:bold;}
-.warn{color:var(--warning);font-weight:bold;}
-.bad{color:var(--danger);font-weight:bold;}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="login">
+<div id="loginPage">
  <div class="login-box card">
   <h2>System Login</h2>
-  <input id="loginEmail" placeholder="E-Mail">
+  <input id="loginEmail" placeholder="E‑Mail">
   <input id="loginPassword" type="password" placeholder="Passwort">
-  <button onclick="login()">Anmelden</button>
+  <button onclick="handleLogin()">Anmelden</button>
+  <p id="loginError" style="color:red;"></p>
  </div>
 </div>
 
@@ -112,178 +113,167 @@ th{background:#f1f5f9;text-align:left}
 <div id="app">
  <div class="sidebar">
   <h1>Wareneingang</h1>
-  <button onclick="show('receive')"><i class="fa fa-truck"></i> Wareneingang</button>
-  <button onclick="show('dashboard')"><i class="fa fa-chart-line"></i> Dashboard</button>
-  <button onclick="show('history')"><i class="fa fa-database"></i> Historie</button>
-  <button onclick="show('users')" id="userBtn"><i class="fa fa-users"></i> Benutzer</button>
+  <button onclick="showPage('receive')"><i class="fa fa-truck"></i> Wareneingang</button>
+  <button onclick="showPage('history')"><i class="fa fa-clock"></i> Historie</button>
+  <button onclick="showPage('users')" id="usersBtn"><i class="fa fa-users"></i> Benutzer</button>
   <button onclick="logout()"><i class="fa fa-sign-out"></i> Logout</button>
  </div>
 
  <div class="main">
 
- <!-- WARNEINGANG -->
- <div id="receive" class="card">
-  <h2>Wareneingang erfassen</h2>
-  <label>Barcode / Artikelnummer</label>
-  <input id="barcode" autofocus>
+  <p><b>Eingeloggt als:</b> <span id="currentUserSpan"></span></p>
 
-  <label>Lieferant</label>
-  <select id="supplier">
-   <option>Amazon Logistics</option>
-   <option>DHL Freight</option>
-   <option>DB Schenker</option>
-   <option>Interner Lieferant</option>
-  </select>
+  <!-- WARNEINGANG -->
+  <div id="receive" class="card">
+   <h2>Wareneingang</h2>
 
-  <label>Lieferscheinnummer</label>
-  <input id="delivery">
+   <input id="barcode" placeholder="Barcode / Artikelnummer" autofocus>
+   <input id="product" placeholder="Produkt">
+   <input type="number" id="qty" placeholder="Menge">
 
-  <label>Produkt</label>
-  <input id="product">
+   <select id="state" onchange="togglePhoto()">
+    <option value="ok">In Ordnung</option>
+    <option value="warn">Leichte Mängel</option>
+    <option value="bad">Beschädigt</option>
+   </select>
 
-  <label>Menge</label>
-  <input type="number" id="qty">
+   <textarea id="note" placeholder="Bemerkung (Pflicht bei Schaden)"></textarea>
+   <input type="file" id="photo" class="hidden">
 
-  <label>Zustand</label>
-  <select id="state" onchange="checkState()">
-   <option value="ok">In Ordnung</option>
-   <option value="warn">Leichte Mängel</option>
-   <option value="bad">Beschädigt</option>
-  </select>
+   <button onclick="saveEntry()">Wareneingang buchen</button>
+  </div>
 
-  <label>Bemerkung (Pflicht bei Schaden)</label>
-  <textarea id="note"></textarea>
+  <!-- HISTORIE -->
+  <div id="history" class="card hidden">
+   <h2>Historie</h2>
+   <table id="historyTable"></table>
+  </div>
 
-  <button onclick="saveEntry()">Wareneingang buchen</button>
- </div>
-
- <!-- DASHBOARD -->
- <div id="dashboard" class="hidden">
-  <div class="card"><p>Gesamte Eingänge</p><div id="count" class="stat">0</div></div>
-  <div class="card"><p>Gesamtmenge</p><div id="sum" class="stat">0</div></div>
-  <div class="card"><p>Beschädigt</p><div id="damaged" class="stat">0</div></div>
- </div>
-
- <!-- HISTORIE -->
- <div id="history" class="hidden card">
-  <h2>Wareneingangshistorie</h2>
-  <table id="table"></table>
- </div>
-
- <!-- BENUTZER (ADMIN) -->
- <div id="users" class="hidden card">
-  <h2>Benutzerverwaltung</h2>
-  <input id="newEmail" placeholder="E-Mail">
-  <input id="newPassword" placeholder="Passwort">
-  <select id="newRole">
-   <option value="employee">Mitarbeiter</option>
-   <option value="admin">Admin</option>
-  </select>
-  <button onclick="addUser()">Benutzer anlegen</button>
-  <table id="userTable"></table>
- </div>
+  <!-- BENUTZER -->
+  <div id="users" class="card hidden">
+   <h2>Benutzerverwaltung</h2>
+   <input id="newUserEmail" placeholder="E‑Mail">
+   <input id="newUserPassword" placeholder="Passwort">
+   <select id="newUserRole">
+    <option value="employee">Mitarbeiter</option>
+    <option value="admin">Admin</option>
+   </select>
+   <button onclick="addUser()">Benutzer anlegen</button>
+   <table id="userTable"></table>
+  </div>
 
  </div>
 </div>
 
 <script>
-/* USERS */
+/* ===== USER SYSTEM ===== */
 let users = JSON.parse(localStorage.getItem("users")) || [
  {email:"admin@firma.de",password:"admin123",role:"admin"}
 ];
 localStorage.setItem("users",JSON.stringify(users));
 
-let currentUser=null;
-let entries = JSON.parse(localStorage.getItem("entries"))||[];
+let entries = JSON.parse(localStorage.getItem("entries")) || [];
+let currentUser = null;
 
-/* LOGIN */
-function login(){
- const u=users.find(x=>x.email===loginEmail.value && x.password===loginPassword.value);
- if(!u){alert("Ungültiger Login");return;}
- currentUser=u;
- login.style.display="none";
- app.style.display="block";
- if(u.role!=="admin") userBtn.style.display="none";
+/* ===== LOGIN ===== */
+function handleLogin(){
+ const email = loginEmail.value.trim();
+ const password = loginPassword.value.trim();
+
+ const user = users.find(u => u.email === email && u.password === password);
+ if(!user){
+  loginError.innerText = "Ungültige Zugangsdaten";
+  return;
+ }
+
+ currentUser = user;
+ loginPage.style.display = "none";
+ app.style.display = "block";
+ currentUserSpan.innerText = user.email + " (" + user.role + ")";
+
+ if(user.role !== "admin") usersBtn.style.display="none";
+ showPage("receive");
  render();
 }
 
-/* NAV */
-function show(id){
- document.querySelectorAll(".main>div").forEach(d=>d.classList.add("hidden"));
+/* ===== NAV ===== */
+function showPage(id){
+ document.querySelectorAll(".main > div")
+  .forEach(d => d.classList.add("hidden"));
  document.getElementById(id).classList.remove("hidden");
 }
 
-function logout(){location.reload();}
+function logout(){
+ location.reload();
+}
 
-/* WARNEINGANG */
-function checkState(){
- if(state.value!=="ok") note.placeholder="Schaden beschreiben (Pflicht)";
+/* ===== WARNEINGANG ===== */
+function togglePhoto(){
+ photo.classList.toggle("hidden", state.value==="ok");
 }
 
 function saveEntry(){
  if(state.value!=="ok" && !note.value){
-  alert("Bemerkung bei Schaden erforderlich");
+  alert("Bemerkung erforderlich bei Schaden!");
   return;
  }
+
  entries.push({
   date:new Date().toLocaleString(),
   barcode:barcode.value,
-  supplier:supplier.value,
-  delivery:delivery.value,
   product:product.value,
-  qty:+qty.value,
+  qty:qty.value,
   state:state.value,
   note:note.value,
   user:currentUser.email
  });
+
  localStorage.setItem("entries",JSON.stringify(entries));
- barcode.value=delivery.value=product.value=qty.value=note.value="";
+ barcode.value=product.value=qty.value=note.value="";
  render();
 }
 
-/* DASHBOARD + HISTORY */
+/* ===== RENDER ===== */
 function render(){
- let t="<tr><th>Datum</th><th>Produkt</th><th>Menge</th><th>Zustand</th><th>Mitarbeiter</th></tr>";
- let sum=0,bad=0;
- entries.forEach(e=>{
-  sum+=e.qty;
-  if(e.state==="bad")bad++;
-  t+=`<tr>
-   <td>${e.date}</td>
-   <td>${e.product}</td>
-   <td>${e.qty}</td>
-   <td class="${e.state}">${e.state}</td>
-   <td>${e.user}</td>
-  </tr>`;
- });
- table.innerHTML=t;
- count.innerText=entries.length;
- sum.innerText=sum;
- damaged.innerText=bad;
+ historyTable.innerHTML = `
+ <tr><th>Datum</th><th>Produkt</th><th>Menge</th><th>Zustand</th><th>Mitarbeiter</th></tr>
+ ` + entries.map(e=>`
+ <tr>
+  <td>${e.date}</td>
+  <td>${e.product}</td>
+  <td>${e.qty}</td>
+  <td class="${e.state}">${e.state}</td>
+  <td>${e.user}</td>
+ </tr>`).join("");
  renderUsers();
 }
 
-/* USERS */
+/* ===== USERS ===== */
 function addUser(){
- users.push({email:newEmail.value,password:newPassword.value,role:newRole.value});
+ users.push({
+  email:newUserEmail.value,
+  password:newUserPassword.value,
+  role:newUserRole.value
+ });
  localStorage.setItem("users",JSON.stringify(users));
- newEmail.value=newPassword.value="";
+ newUserEmail.value=newUserPassword.value="";
  renderUsers();
 }
 
 function renderUsers(){
- let t="<tr><th>E-Mail</th><th>Rolle</th><th></th></tr>";
- users.forEach((u,i)=>{
-  t+=`<tr>
-   <td>${u.email}</td>
-   <td>${u.role}</td>
-   <td>${u.email!=="admin@firma.de"?`<button onclick="delUser(${i})">Löschen</button>`:""}</td>
-  </tr>`;
- });
- userTable.innerHTML=t;
+ userTable.innerHTML = `
+ <tr><th>E‑Mail</th><th>Rolle</th><th></th></tr>
+ ` + users.map((u,i)=>`
+ <tr>
+  <td>${u.email}</td>
+  <td>${u.role}</td>
+  <td>${u.email!=="admin@firma.de"?
+   `<button onclick="deleteUser(${i})">Löschen</button>`:""}
+  </td>
+ </tr>`).join("");
 }
 
-function delUser(i){
+function deleteUser(i){
  users.splice(i,1);
  localStorage.setItem("users",JSON.stringify(users));
  renderUsers();
@@ -292,3 +282,4 @@ function delUser(i){
 
 </body>
 </html>
+``
