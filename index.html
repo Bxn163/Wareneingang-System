@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogiTrack Enterprise | Ultimate V6</title>
+    <title>LogiTrack Enterprise | Ultimate V7</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -11,51 +11,68 @@
 
     <style>
         :root {
+            /* Light Theme Variables */
             --primary: #0f172a; --primary-light: #1e293b; --accent: #2563eb; --accent-hover: #1d4ed8;
             --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --bg: #f8fafc;
             --card-bg: #ffffff; --text-main: #334155; --text-muted: #64748b; --border: #e2e8f0;
             --sidebar-width: 280px;
         }
 
+        /* Dark Mode Overrides */
+        body.dark-mode {
+            --bg: #020617; --card-bg: #0f172a; --text-main: #f8fafc; --text-muted: #94a3b8;
+            --border: #334155; --primary: #020617; --primary-light: #0f172a;
+        }
+
+        /* Font Sizes */
+        body.font-small { font-size: 0.85rem; }
+        body.font-large { font-size: 1.15rem; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); height: 100vh; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 0.3s, color 0.3s; }
         .hidden { display: none !important; }
 
         /* --- UI COMPONENTS --- */
-        .btn { padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
-        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn { padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-outline:hover { background: #f1f5f9; }
+        .btn-outline:hover { background: var(--border); }
 
-        .card { background: var(--card-bg); padding: 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; }
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        .badge-success { background: #dcfce7; color: #166534; }
-        .badge-warning { background: #fef3c7; color: #92400e; }
-        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .card { background: var(--card-bg); padding: 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; transition: 0.3s; }
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        /* Compact UI Overrides */
+        body.compact-ui .card { padding: 15px; margin-bottom: 15px; }
+        body.compact-ui .btn { padding: 8px 12px; }
+        body.compact-ui .input-group { margin-bottom: 8px; }
+        body.compact-ui th, body.compact-ui td { padding: 8px; }
 
         /* --- LAYOUT --- */
         #app { display: grid; grid-template-columns: var(--sidebar-width) 1fr; height: 100vh; }
         
-        .sidebar { background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; }
-        .sidebar-brand { font-size: 1.5rem; font-weight: 700; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .sidebar { background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; border-right: 1px solid var(--border); }
+        .sidebar-brand { font-size: 1.5em; font-weight: 700; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; color: white; }
         .nav-item { padding: 14px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; color: #cbd5e1; font-weight: 500; transition: 0.2s; }
         .nav-item:hover, .nav-item.active { background: var(--primary-light); color: white; border-left: 4px solid var(--accent); }
         
         .main-content { padding: 40px; overflow-y: auto; background: var(--bg); height: 100vh; position: relative; }
         .page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .page-header h2 { font-size: 1.8rem; color: var(--primary); }
+        .page-header h2 { font-size: 1.8em; color: var(--text-main); }
 
         /* --- FORMS & INPUTS --- */
         .input-group { margin-bottom: 16px; display: flex; flex-direction: column; }
-        .input-group label { margin-bottom: 6px; font-size: 0.9rem; font-weight: 600; color: var(--primary-light); }
-        input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: #f8fafc; transition: 0.2s; }
+        .input-group label { margin-bottom: 6px; font-size: 0.9em; font-weight: 600; color: var(--text-muted); }
+        input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 1em; background: var(--bg); color: var(--text-main); transition: 0.2s; }
         input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         
         .radio-group { display: flex; gap: 10px; }
-        .radio-btn { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600; background: #f8fafc; transition: 0.2s; }
+        .radio-btn { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--bg); transition: 0.2s; }
         .radio-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         /* --- SIGNATURE & CHARTS --- */
@@ -65,26 +82,25 @@
 
         /* --- TABLES & SEARCH --- */
         .search-box { position: relative; max-width: 400px; margin-bottom: 15px; }
-        .search-box i { position: absolute; left: 15px; top: 15px; color: var(--text-muted); }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
         .search-box input { padding-left: 40px; }
         table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 16px; background: #f1f5f9; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
+        th { text-align: left; padding: 16px; background: var(--bg); font-size: 0.85em; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
         td { padding: 16px; border-bottom: 1px solid var(--border); }
-        tr:hover td { background: #f8fafc; }
+        tr:hover td { background: var(--bg); }
 
         /* --- WIZARD --- */
-        .wizard-steps { display: flex; justify-content: space-between; margin-bottom: 30px; background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
-        .step-indicator { flex: 1; text-align: center; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; }
+        .wizard-steps { display: flex; justify-content: space-between; margin-bottom: 30px; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
+        .step-indicator { flex: 1; text-align: center; color: var(--text-muted); font-weight: 600; font-size: 0.9em; }
         .step-indicator.active { color: var(--accent); }
         .step-indicator.completed { color: var(--success); }
         .step-content { animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- MODAL (POPUP) --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 90%; max-width: 600px; border-radius: 16px; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        
-        .preview-box { border: 1px solid var(--border); background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 0.9rem; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 600px; border-radius: 16px; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .preview-box { border: 1px solid var(--border); background: var(--bg); padding: 20px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 0.9em; }
 
         /* --- LOGIN --- */
         #loginPage { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary) 0%, #000000 100%); }
@@ -92,10 +108,10 @@
         /* --- PRINT STYLES --- */
         #printArea { display: none; }
         @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 40px; background: white; }
+            body { background: white !important; color: black !important; }
             #app, #loginPage, .modal-overlay { display: none !important; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 40px; background: white; color: black; }
             .print-header { border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
             .print-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
             .print-table th, .print-table td { border: 1px solid #000; padding: 12px; text-align: left; }
@@ -108,7 +124,7 @@
 <div id="printArea">
     <div class="print-header">
         <h1 style="font-family: 'Inter', sans-serif;">WARENBEGLEITSCHEIN</h1>
-        <p style="color: #666;">LogiTrack Enterprise System</p>
+        <p style="color: #666;">LogiTrack Enterprise System V7</p>
     </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; font-size: 1.1rem;">
@@ -151,7 +167,7 @@
         <h2 style="color: var(--success); display: flex; align-items: center; gap: 10px;">
             <i class="fas fa-check-circle"></i> Erfolgreich verbucht!
         </h2>
-        <p style="margin-top: 10px;">Die Daten wurden sicher im System gespeichert. Möchten Sie einen Warenbegleitschein für das Paket drucken?</p>
+        <p style="margin-top: 10px;">Die Daten wurden sicher gespeichert. Möchten Sie einen Warenbegleitschein für das Paket drucken?</p>
         
         <div class="preview-box">
             <b>Vorschau Begleitschein:</b><br><br>
@@ -168,37 +184,38 @@
 </div>
 
 <div id="loginPage">
-    <div class="card" style="width: 100%; max-width: 400px; text-align: center; padding: 40px;">
-        <i class="fas fa-microchip fa-3x" style="color: var(--accent); margin-bottom: 20px;"></i>
+    <div class="card" style="width: 100%; max-width: 400px; text-align: center; padding: 40px; background: white; color: black;">
+        <i class="fas fa-microchip fa-3x" style="color: #2563eb; margin-bottom: 20px;"></i>
         <h2 style="margin-bottom: 30px;">LogiTrack Login</h2>
         <div class="input-group" style="text-align: left;">
-            <label>Benutzername</label>
-            <input type="text" id="loginEmail" placeholder="admin oder lager">
+            <label style="color: #334155;">Benutzername</label>
+            <input type="text" id="loginEmail" placeholder="admin oder lager" style="background: #f8fafc; color: black;">
         </div>
         <div class="input-group" style="text-align: left;">
-            <label>Passwort</label>
-            <input type="password" id="loginPassword" placeholder="••••••••">
+            <label style="color: #334155;">Passwort</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" style="background: #f8fafc; color: black;">
         </div>
-        <button class="btn btn-primary" id="loginBtn" style="width: 100%; margin-top: 10px;">Anmelden</button>
-        <p id="loginError" style="color: var(--danger); margin-top: 15px; font-weight: 600;"></p>
+        <button class="btn" style="background: #2563eb; color: white; width: 100%; margin-top: 10px;" id="loginBtn">Anmelden</button>
+        <p id="loginError" style="color: #ef4444; margin-top: 15px; font-weight: 600;"></p>
     </div>
 </div>
 
 <div id="app" class="hidden">
     <aside class="sidebar">
-        <div class="sidebar-brand"><i class="fas fa-boxes-stacked"></i> LogiTrack V6</div>
+        <div class="sidebar-brand"><i class="fas fa-boxes-stacked"></i> LogiTrack V7</div>
         <nav style="flex-grow: 1;">
             <div class="nav-item active" data-page="dashPage" id="navDash"><i class="fas fa-chart-pie"></i> Dashboard</div>
-            <div class="nav-item" data-page="receivePage"><i class="fas fa-download"></i> Wareneingang</div>
+            <div class="nav-item" data-page="receivePage" id="navRec"><i class="fas fa-download"></i> Wareneingang</div>
             <div class="nav-item" data-page="inventoryPage"><i class="fas fa-cubes"></i> Warenbestand</div>
             <div class="nav-item" data-page="historyPage"><i class="fas fa-list-ul"></i> Historie</div>
             <div class="nav-item" data-page="faqPage"><i class="fas fa-question-circle"></i> Hilfe / FAQ</div>
             <div class="nav-item admin-only" data-page="masterDataPage"><i class="fas fa-database"></i> Stammdaten</div>
             <div class="nav-item admin-only" data-page="userPage"><i class="fas fa-users-cog"></i> Benutzer</div>
+            <div class="nav-item" data-page="settingsPage"><i class="fas fa-sliders-h"></i> Einstellungen</div>
         </nav>
-        <div style="border-top: 1px solid var(--primary-light); padding-top: 20px;">
-            <p style="margin-bottom: 10px; font-size: 0.9rem;"><i class="fas fa-user-circle"></i> <span id="userNameDisplay"></span></p>
-            <button class="btn btn-outline" id="logoutBtn" style="width: 100%; color: white; border-color: #334155;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+            <p style="margin-bottom: 10px; font-size: 0.9em;"><i class="fas fa-user-circle"></i> <span id="userNameDisplay"></span></p>
+            <button class="btn btn-outline" id="logoutBtn" style="width: 100%; color: white; border-color: rgba(255,255,255,0.2);"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </aside>
 
@@ -209,16 +226,16 @@
             
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
                 <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Eingänge Heute</h3>
-                    <p id="statToday" style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">0</p>
+                    <h3 style="color: var(--text-muted); font-size: 0.9em; text-transform: uppercase;">Eingänge Heute</h3>
+                    <p id="statToday" style="font-size: 2.5em; font-weight: 700; color: var(--accent);">0</p>
                 </div>
                 <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Teile im Bestand</h3>
-                    <p id="statTotalItems" style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">0</p>
+                    <h3 style="color: var(--text-muted); font-size: 0.9em; text-transform: uppercase;">Teile im Bestand</h3>
+                    <p id="statTotalItems" style="font-size: 2.5em; font-weight: 700; color: var(--text-main);">0</p>
                 </div>
                 <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">Mängel / Quarantäne</h3>
-                    <p id="statIssues" style="font-size: 2.5rem; font-weight: 700; color: var(--danger);">0</p>
+                    <h3 style="color: var(--text-muted); font-size: 0.9em; text-transform: uppercase;">Mängel / Quarantäne</h3>
+                    <p id="statIssues" style="font-size: 2.5em; font-weight: 700; color: var(--danger);">0</p>
                 </div>
             </div>
 
@@ -230,7 +247,7 @@
                 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
                     <h3 style="align-self: flex-start;">Qualitäts-Tacho</h3>
                     <div class="chart-container-small" style="margin-top: 20px;"><canvas id="qualityGauge"></canvas></div>
-                    <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem; font-weight: 600;" id="gaugeLabel"></p>
+                    <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9em; font-weight: 600;" id="gaugeLabel"></p>
                 </div>
             </div>
             <div class="card" style="margin-top: 20px;">
@@ -352,13 +369,13 @@
         <section id="masterDataPage" class="page-section hidden admin-only">
             <div class="page-header"><h2>System & Stammdaten</h2></div>
             
-            <div class="card" style="background: #f1f5f9; border-color: var(--accent);">
+            <div class="card" style="border-color: var(--accent);">
                 <h3><i class="fas fa-hdd"></i> Datensicherung (Backup & Restore)</h3>
-                <p style="margin: 10px 0; font-size: 0.9rem; color: var(--text-muted);">Sichern Sie das gesamte System (Benutzer, Historie, Bestand) als lokale Datei oder stellen Sie Daten wieder her.</p>
+                <p style="margin: 10px 0; font-size: 0.9em; color: var(--text-muted);">Sichern Sie das gesamte System (Benutzer, Historie, Bestand) als lokale Datei.</p>
                 <div style="display: flex; gap: 15px;">
-                    <button class="btn btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Backup exportieren</button>
+                    <button class="btn btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Exportieren</button>
                     <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(event)">
-                    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Backup importieren</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Importieren</button>
                 </div>
             </div>
 
@@ -382,6 +399,67 @@
             </div>
         </section>
 
+        <section id="settingsPage" class="page-section hidden">
+            <div class="page-header"><h2>Persönliche & System-Einstellungen</h2></div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="card">
+                    <h3><i class="fas fa-paint-brush"></i> Design & Ansicht</h3>
+                    <div class="input-group" style="margin-top: 15px;">
+                        <label>Erscheinungsbild</label>
+                        <select id="setTheme">
+                            <option value="light">Hell (Standard)</option>
+                            <option value="dark">Dunkelmodus (Dark Mode)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Schriftgröße</label>
+                        <select id="setFontSize">
+                            <option value="small">Klein (Tablet)</option>
+                            <option value="medium">Normal (Standard)</option>
+                            <option value="large">Groß (Desktop)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Firmenfarbe (Hauptfarbe)</label>
+                        <input type="color" id="setColor" style="height: 50px; padding: 5px; cursor: pointer;">
+                    </div>
+                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="setCompact" style="width: auto;">
+                        <label style="margin: 0;">Kompakt-Modus (Kleinere Abstände)</label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-cogs"></i> Workflow & Scanner</h3>
+                    <div class="input-group" style="margin-top: 15px;">
+                        <label>Aktion nach erfolgreichem Speichern/Drucken</label>
+                        <select id="setWorkflow">
+                            <option value="dash">Zum Dashboard wechseln</option>
+                            <option value="stay">Im Formular bleiben (Für neuen Scan)</option>
+                        </select>
+                    </div>
+                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="setSounds" style="width: auto;">
+                        <label style="margin: 0;">Akustisches Feedback (Scanner-Beep / Warnungen)</label>
+                    </div>
+                    <div class="input-group">
+                        <label>Datumsformat</label>
+                        <select id="setDateFormat">
+                            <option value="DE">Deutsch (TT.MM.JJJJ)</option>
+                            <option value="INT">International (JJJJ-MM-TT)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card admin-only" style="border: 2px solid var(--danger); background: rgba(239, 68, 68, 0.05);">
+                <h3 style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Gefahrenzone (Nur Admins)</h3>
+                <p style="margin: 10px 0; font-size: 0.9em; color: var(--text-main);">Hier können Sie das gesamte System auf den Werkszustand zurücksetzen. Alle Historien, Bestände und Benutzer (außer Standard-Logins) werden unwiderruflich gelöscht.</p>
+                <button class="btn btn-danger" onclick="factoryReset()"><i class="fas fa-trash-alt"></i> System auf Werkseinstellungen zurücksetzen</button>
+            </div>
+        </section>
+
         <section id="faqPage" class="page-section hidden">
             <div class="page-header"><h2>Hilfe & System-Info</h2></div>
             <div class="card">
@@ -389,7 +467,7 @@
                 <p style="margin-bottom: 20px;">Klicken Sie in Schritt 2 in das Feld "Barcode". Der Handscanner trägt die Nummer automatisch ein und das System erkennt den Code.</p>
                 
                 <h3 style="margin-bottom: 10px; color: var(--accent);"><i class="fas fa-exclamation-triangle"></i> Was passiert bei Schäden?</h3>
-                <p style="margin-bottom: 20px;">Wenn Sie in Schritt 3 einen Mangel angeben, ändert das System im letzten Schritt den Status auf <b>Quarantäne / Sperrlager</b>.</p>
+                <p style="margin-bottom: 20px;">Wenn Sie in Schritt 3 einen Mangel angeben, ändert das System im letzten Schritt den Status auf <b>Quarantäne / Sperrlager</b>. Achten Sie auf den Warnton!</p>
 
                 <h3 style="margin-bottom: 10px; color: var(--accent);"><i class="fas fa-edit"></i> Ich habe mich vertippt!</h3>
                 <p>Mitarbeiter können Einträge nicht ändern. Melden Sie sich bei einem Administrator, dieser kann im Reiter "Warenbestand" oder "Historie" den Stift-Button nutzen.</p>
@@ -419,50 +497,98 @@
 
 <script>
 /**
- * LOGITRACK ENTERPRISE - ULTIMATE V6
+ * LOGITRACK ENTERPRISE - ULTIMATE V7 (SETTINGS UPDATE)
  * Code by Gemini
  */
 
-// --- STATE MANAGEMENT ---
+// --- STATE & LOCAL STORAGE ---
 let state = {
     currentUser: null,
-    users: JSON.parse(localStorage.getItem("wms6_users")) || [{ email: "admin", password: "123", role: "admin" }, { email: "lager", password: "123", role: "employee" }],
-    records: JSON.parse(localStorage.getItem("wms6_records")) || [],
-    inventory: JSON.parse(localStorage.getItem("wms6_inventory")) || [],
-    masterSuppliers: JSON.parse(localStorage.getItem("wms6_ms")) || ["Bechtle", "Dell Technologies", "Lenovo", "Cyberport", "Muster-IT GmbH"],
-    masterProducts: JSON.parse(localStorage.getItem("wms6_mp")) || ["Notebooks", "Monitore", "Server", "Switches", "Peripherie"]
+    users: JSON.parse(localStorage.getItem("wms7_users")) || [{ email: "admin", password: "123", role: "admin" }, { email: "lager", password: "123", role: "employee" }],
+    records: JSON.parse(localStorage.getItem("wms7_records")) || [],
+    inventory: JSON.parse(localStorage.getItem("wms7_inventory")) || [],
+    masterSuppliers: JSON.parse(localStorage.getItem("wms7_ms")) || ["Bechtle", "Dell Technologies", "Lenovo", "Cyberport", "Muster-IT GmbH"],
+    masterProducts: JSON.parse(localStorage.getItem("wms7_mp")) || ["Notebooks", "Monitore", "Server", "Switches", "Peripherie"],
+    settings: JSON.parse(localStorage.getItem("wms7_settings")) || { theme: 'light', fontSize: 'medium', color: '#2563eb', compact: false, workflow: 'dash', sounds: true, dateFormat: 'DE' }
 };
 
 const saveData = () => {
-    localStorage.setItem("wms6_users", JSON.stringify(state.users));
-    localStorage.setItem("wms6_records", JSON.stringify(state.records));
-    localStorage.setItem("wms6_inventory", JSON.stringify(state.inventory));
-    localStorage.setItem("wms6_ms", JSON.stringify(state.masterSuppliers));
-    localStorage.setItem("wms6_mp", JSON.stringify(state.masterProducts));
+    localStorage.setItem("wms7_users", JSON.stringify(state.users));
+    localStorage.setItem("wms7_records", JSON.stringify(state.records));
+    localStorage.setItem("wms7_inventory", JSON.stringify(state.inventory));
+    localStorage.setItem("wms7_ms", JSON.stringify(state.masterSuppliers));
+    localStorage.setItem("wms7_mp", JSON.stringify(state.masterProducts));
+    localStorage.setItem("wms7_settings", JSON.stringify(state.settings));
 };
 
-// --- BACKUP & RESTORE (V6) ---
+// --- SETTINGS ENGINE (V7) ---
+function applySettings() {
+    // Theme & Classes
+    document.body.classList.toggle('dark-mode', state.settings.theme === 'dark');
+    document.body.classList.toggle('compact-ui', state.settings.compact);
+    document.body.classList.remove('font-small', 'font-large');
+    if(state.settings.fontSize === 'small') document.body.classList.add('font-small');
+    if(state.settings.fontSize === 'large') document.body.classList.add('font-large');
+    
+    // Custom Color
+    document.documentElement.style.setProperty('--accent', state.settings.color);
+    
+    // Update Inputs
+    document.getElementById("setTheme").value = state.settings.theme;
+    document.getElementById("setFontSize").value = state.settings.fontSize;
+    document.getElementById("setColor").value = state.settings.color;
+    document.getElementById("setCompact").checked = state.settings.compact;
+    document.getElementById("setWorkflow").value = state.settings.workflow;
+    document.getElementById("setSounds").checked = state.settings.sounds;
+    document.getElementById("setDateFormat").value = state.settings.dateFormat;
+}
+
+// Settings Listeners
+document.getElementById("setTheme").addEventListener("change", (e) => { state.settings.theme = e.target.value; saveData(); applySettings(); });
+document.getElementById("setFontSize").addEventListener("change", (e) => { state.settings.fontSize = e.target.value; saveData(); applySettings(); });
+document.getElementById("setColor").addEventListener("input", (e) => { state.settings.color = e.target.value; saveData(); applySettings(); });
+document.getElementById("setCompact").addEventListener("change", (e) => { state.settings.compact = e.target.checked; saveData(); applySettings(); });
+document.getElementById("setWorkflow").addEventListener("change", (e) => { state.settings.workflow = e.target.value; saveData(); applySettings(); });
+document.getElementById("setSounds").addEventListener("change", (e) => { state.settings.sounds = e.target.checked; saveData(); applySettings(); playSound('success'); });
+document.getElementById("setDateFormat").addEventListener("change", (e) => { state.settings.dateFormat = e.target.value; saveData(); applySettings(); renderAll(); });
+
+// Danger Zone
+window.factoryReset = () => {
+    if(prompt("ACHTUNG! Geben Sie 'RESET' ein, um ALLE Daten unwiderruflich zu löschen:") === "RESET") {
+        localStorage.clear();
+        alert("System wurde zurückgesetzt. Seite lädt neu.");
+        location.reload();
+    }
+};
+
+// Sound Engine
+function playSound(type) {
+    if(!state.settings.sounds) return;
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        osc.connect(ctx.destination);
+        if(type === 'success') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.1); }
+        if(type === 'error') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.3); }
+    } catch(e) {} // Fallback for old browsers
+}
+
+function formatDate(isoDate) {
+    if(state.settings.dateFormat === 'INT') return isoDate; // YYYY-MM-DD
+    const p = isoDate.split('-');
+    if(p.length === 3) return `${p[2]}.${p[1]}.${p[0]}`; // DD.MM.YYYY
+    return isoDate;
+}
+
+// --- BACKUP & RESTORE ---
 window.exportBackup = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-    const dl = document.createElement('a');
-    dl.setAttribute("href", dataStr);
-    dl.setAttribute("download", `logitrack_backup_${new Date().toISOString().split('T')[0]}.json`);
-    dl.click();
+    const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", `wms_backup_${new Date().toISOString().split('T')[0]}.json`); dl.click();
 };
 window.importBackup = (event) => {
-    const file = event.target.files[0];
-    if(!file) return;
+    const file = event.target.files[0]; if(!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            state = JSON.parse(e.target.result);
-            saveData();
-            alert("Backup erfolgreich geladen! System wird aktualisiert.");
-            location.reload();
-        } catch(err) {
-            alert("Fehler beim Lesen der Datei. Ist es ein gültiges Backup?");
-        }
-    };
+    reader.onload = (e) => { try { state = JSON.parse(e.target.result); saveData(); alert("Backup geladen!"); location.reload(); } catch(err) { alert("Fehler beim Lesen!"); } };
     reader.readAsText(file);
 };
 
@@ -474,14 +600,15 @@ document.getElementById("loginBtn").addEventListener("click", () => {
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("app").classList.remove("hidden");
         document.getElementById("userNameDisplay").textContent = `${user.email} (${user.role})`;
-        
         if(user.role !== 'admin') document.querySelectorAll(".admin-only").forEach(el => el.classList.add("hidden"));
         
+        applySettings();
         resetWizardTime();
         initMasterData();
         renderAll();
     } else {
         document.getElementById("loginError").textContent = "Falsche Zugangsdaten!";
+        playSound('error');
     }
 });
 document.getElementById("logoutBtn").addEventListener("click", () => location.reload());
@@ -557,6 +684,7 @@ function autoCheckStatus() {
     if(pack === 'ja' || func === 'nein' || qSoll !== qIst) {
         document.getElementById("w-status").value = "Quarantäne";
         document.getElementById("w-status").style.color = "var(--danger)";
+        playSound('error'); // V7 Warning Sound
     } else {
         document.getElementById("w-status").value = "Einlagern";
         document.getElementById("w-status").style.color = "var(--success)";
@@ -567,51 +695,35 @@ function autoCheckStatus() {
 const canvas = document.getElementById("signature-pad");
 const ctx = canvas.getContext("2d");
 let drawing = false;
-function initSignature() {
-    canvas.width = canvas.parentElement.offsetWidth;
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-}
+function initSignature() { canvas.width = canvas.parentElement.offsetWidth; ctx.lineWidth = 2; ctx.lineCap = "round"; }
 canvas.addEventListener("mousedown", () => drawing = true);
 canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
-canvas.addEventListener("mousemove", (e) => {
-    if(!drawing) return;
-    const rect = canvas.getBoundingClientRect();
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
-});
+canvas.addEventListener("mousemove", (e) => { if(!drawing) return; const rect = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke(); });
 window.clearSignature = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// --- V6: FORMULAR SPEICHERN & MODAL ---
+// --- FORMULAR SPEICHERN & MODAL ---
 document.getElementById("btnSubmit").addEventListener("click", () => {
     const record = {
-        id: Date.now(),
-        date: document.getElementById("w-date").value,
-        time: document.getElementById("w-time").value,
-        supplier: document.getElementById("w-supplier").value,
-        note: document.getElementById("w-deliveryNote").value,
-        product: document.getElementById("w-product").value,
-        barcode: document.getElementById("w-barcode").value || "Kein Barcode",
-        qtyIst: parseInt(document.getElementById("w-qtyIst").value) || 0,
-        status: document.getElementById("w-status").value,
-        location: document.getElementById("w-status").value === "Quarantäne" ? "Sperrlager" : "Hauptlager",
-        user: state.currentUser.email
+        id: Date.now(), date: document.getElementById("w-date").value, time: document.getElementById("w-time").value,
+        supplier: document.getElementById("w-supplier").value, note: document.getElementById("w-deliveryNote").value,
+        product: document.getElementById("w-product").value, barcode: document.getElementById("w-barcode").value || "Kein Barcode",
+        qtyIst: parseInt(document.getElementById("w-qtyIst").value) || 0, status: document.getElementById("w-status").value,
+        location: document.getElementById("w-status").value === "Quarantäne" ? "Sperrlager" : "Hauptlager", user: state.currentUser.email
     };
 
-    if(!record.note) return alert("Bitte Lieferscheinnummer eingeben!");
+    if(!record.note) { playSound('error'); return alert("Bitte Lieferscheinnummer eingeben!"); }
+    
+    playSound('success'); // V7 Success Sound
 
-    // Capture Signature BEFORE clearing form
     const sigDataUrl = canvas.toDataURL();
-
-    // Speichern
     state.records.unshift(record);
     let item = state.inventory.find(i => i.barcode === record.barcode);
     if(item) { item.qty += record.qtyIst; item.location = record.location; } 
     else { state.inventory.push({ barcode: record.barcode, product: record.product, qty: record.qtyIst, location: record.location }); }
     saveData();
 
-    // Prepare Print View
-    document.getElementById("p-date").textContent = `${record.date} ${record.time}`;
+    // Prepare Print View & Modal
+    document.getElementById("p-date").textContent = `${formatDate(record.date)} ${record.time}`;
     document.getElementById("p-user").textContent = record.user;
     document.getElementById("p-supplier").textContent = record.supplier;
     document.getElementById("p-note").textContent = record.note;
@@ -622,55 +734,41 @@ document.getElementById("btnSubmit").addEventListener("click", () => {
     document.getElementById("p-status").textContent = record.location;
     document.getElementById("p-signature-img").src = sigDataUrl;
 
-    // Prepare Modal Preview
     document.getElementById("prev-product").textContent = record.product;
     document.getElementById("prev-qty").textContent = record.qtyIst;
     document.getElementById("prev-status").textContent = record.location;
     document.getElementById("prev-barcode").textContent = record.barcode;
 
-    // Show Modal
     document.getElementById("printModal").classList.remove("hidden");
 
-    // Reset Form internally
+    // Reset Form
     document.querySelectorAll("input[type='text'], input[type='number']").forEach(i => i.value = "");
-    clearSignature();
-    resetWizardTime();
-    
-    // Reset Step UI visually
-    document.getElementById(`step-4`).classList.add("hidden");
-    document.getElementById(`ind-4`).classList.remove("active");
-    step = 1;
-    document.getElementById(`step-1`).classList.remove("hidden");
-    document.querySelectorAll('.step-indicator').forEach(i => { i.classList.remove('completed'); i.classList.remove('active'); });
-    document.getElementById('ind-1').classList.add('active');
-    document.getElementById("btnNext").classList.remove("hidden");
-    document.getElementById("btnSubmit").classList.add("hidden");
-    document.getElementById("btnPrev").style.visibility = "hidden";
-    
+    clearSignature(); resetWizardTime();
+    document.getElementById(`step-4`).classList.add("hidden"); document.getElementById(`ind-4`).classList.remove("active"); step = 1;
+    document.getElementById(`step-1`).classList.remove("hidden"); document.querySelectorAll('.step-indicator').forEach(i => { i.classList.remove('completed'); i.classList.remove('active'); });
+    document.getElementById('ind-1').classList.add('active'); document.getElementById("btnNext").classList.remove("hidden"); document.getElementById("btnSubmit").classList.add("hidden"); document.getElementById("btnPrev").style.visibility = "hidden";
     renderAll();
 });
 
-// Modal Actions
+function handleWorkflowRoute() {
+    if(state.settings.workflow === 'dash') document.getElementById("navDash").click();
+    else document.getElementById("navRec").click(); // Bleibt im Formular
+}
+
 document.getElementById("btnSkipPrint").addEventListener("click", () => {
     document.getElementById("printModal").classList.add("hidden");
-    document.getElementById("navDash").click(); // Gehe zu Dashboard
+    handleWorkflowRoute();
 });
 
 document.getElementById("btnDoPrint").addEventListener("click", () => {
     document.getElementById("printModal").classList.add("hidden");
     window.print();
-    setTimeout(() => document.getElementById("navDash").click(), 500); // Gehe nach Druck-Dialog zu Dashboard
+    setTimeout(() => handleWorkflowRoute(), 500);
 });
 
 // --- RENDER FUNKTIONEN ---
-function renderAll() {
-    renderDashboard();
-    renderInventory();
-    renderHistory();
-    renderUsers();
-}
+function renderAll() { renderDashboard(); renderInventory(); renderHistory(); renderUsers(); }
 
-// V6 Dashboard Charts (Trend & Gauge)
 let tChart, gChart, sChart;
 function renderDashboard() {
     const today = new Date().toISOString().split('T')[0];
@@ -678,129 +776,45 @@ function renderDashboard() {
     document.getElementById("statTotalItems").textContent = state.inventory.reduce((sum, item) => sum + item.qty, 0);
     document.getElementById("statIssues").textContent = state.records.filter(r => r.status === 'Quarantäne').length;
 
-    if(tChart) tChart.destroy();
-    if(gChart) gChart.destroy();
-    if(sChart) sChart.destroy();
+    if(tChart) tChart.destroy(); if(gChart) gChart.destroy(); if(sChart) sChart.destroy();
+    Chart.defaults.color = state.settings.theme === 'dark' ? '#cbd5e1' : '#64748b'; // Adapt Chart text color
 
-    // Trend Chart Logic (Letzte 7 Tage)
     const dates = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().split('T')[0]; }).reverse();
     const trendData = dates.map(d => state.records.filter(r => r.date === d).length);
+    tChart = new Chart(document.getElementById('trendChart'), { type: 'line', data: { labels: dates.map(d => formatDate(d).substring(0,5)), datasets: [{ label: 'Eingänge', data: trendData, borderColor: state.settings.color, backgroundColor: state.settings.color+'33', fill: true, tension: 0.3 }] }, options: { maintainAspectRatio: false } });
 
-    tChart = new Chart(document.getElementById('trendChart'), {
-        type: 'line',
-        data: { labels: dates.map(d => d.substring(5)), datasets: [{ label: 'Eingänge', data: trendData, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3 }] },
-        options: { maintainAspectRatio: false }
-    });
-
-    // Gauge Chart Logic (Tacho)
-    const okCount = state.records.filter(r => r.status === 'Einlagern').length;
-    const rekCount = state.records.filter(r => r.status === 'Quarantäne').length;
-    const total = okCount + rekCount || 1;
-    const percent = Math.round((okCount / total) * 100);
+    const okCount = state.records.filter(r => r.status === 'Einlagern').length; const rekCount = state.records.filter(r => r.status === 'Quarantäne').length;
+    const total = okCount + rekCount || 1; const percent = Math.round((okCount / total) * 100);
     document.getElementById("gaugeLabel").textContent = `${percent}% Fehlerfrei`;
+    gChart = new Chart(document.getElementById('qualityGauge'), { type: 'doughnut', data: { labels: ['OK', 'Mängel'], datasets: [{ data: [okCount || 1, rekCount], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }] }, options: { rotation: -90, circumference: 180, maintainAspectRatio: false, cutout: '75%' } });
 
-    gChart = new Chart(document.getElementById('qualityGauge'), {
-        type: 'doughnut',
-        data: { labels: ['OK', 'Mängel'], datasets: [{ data: [okCount || 1, rekCount], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }] },
-        options: { rotation: -90, circumference: 180, maintainAspectRatio: false, cutout: '75%' }
-    });
-
-    sChart = new Chart(document.getElementById('supplierChart'), {
-        type: 'bar',
-        data: {
-            labels: state.masterSuppliers.slice(0,6),
-            datasets: [{ label: 'Lieferungen', data: state.masterSuppliers.map(s => state.records.filter(r => r.supplier === s).length), backgroundColor: '#334155' }]
-        },
-        options: { maintainAspectRatio: false }
-    });
+    sChart = new Chart(document.getElementById('supplierChart'), { type: 'bar', data: { labels: state.masterSuppliers.slice(0,6), datasets: [{ label: 'Lieferungen', data: state.masterSuppliers.map(s => state.records.filter(r => r.supplier === s).length), backgroundColor: state.settings.theme==='dark'?'#475569':'#334155' }] }, options: { maintainAspectRatio: false } });
 }
 
-// Master Data Verwaltung
-function initMasterData() {
-    document.querySelector(".master-supplier-list").innerHTML = state.masterSuppliers.map(s => `<option>${s}</option>`).join("");
-    document.querySelector(".master-product-list").innerHTML = state.masterProducts.map(p => `<option>${p}</option>`).join("");
-    renderMasterAdmin();
-}
-function renderMasterAdmin() {
-    document.getElementById("supplierList").innerHTML = state.masterSuppliers.map((s, i) => `<li>${s} <i class="fas fa-trash" style="float:right; cursor:pointer; color:red;" onclick="delMaster('s', ${i})"></i></li>`).join("");
-    document.getElementById("productList").innerHTML = state.masterProducts.map((p, i) => `<li>${p} <i class="fas fa-trash" style="float:right; cursor:pointer; color:red;" onclick="delMaster('p', ${i})"></i></li>`).join("");
-}
-window.addMaster = (type) => {
-    if(type === 'supplier' && document.getElementById("newSupplier").value) { state.masterSuppliers.push(document.getElementById("newSupplier").value); document.getElementById("newSupplier").value = ""; }
-    if(type === 'product' && document.getElementById("newProduct").value) { state.masterProducts.push(document.getElementById("newProduct").value); document.getElementById("newProduct").value = ""; }
-    saveData(); initMasterData();
-};
-window.delMaster = (type, index) => {
-    if(type === 's') state.masterSuppliers.splice(index, 1); else state.masterProducts.splice(index, 1);
-    saveData(); initMasterData();
-};
+// Master Data
+function initMasterData() { document.querySelector(".master-supplier-list").innerHTML = state.masterSuppliers.map(s => `<option>${s}</option>`).join(""); document.querySelector(".master-product-list").innerHTML = state.masterProducts.map(p => `<option>${p}</option>`).join(""); renderMasterAdmin(); }
+function renderMasterAdmin() { document.getElementById("supplierList").innerHTML = state.masterSuppliers.map((s, i) => `<li>${s} <i class="fas fa-trash" style="float:right; cursor:pointer; color:var(--danger);" onclick="delMaster('s', ${i})"></i></li>`).join(""); document.getElementById("productList").innerHTML = state.masterProducts.map((p, i) => `<li>${p} <i class="fas fa-trash" style="float:right; cursor:pointer; color:var(--danger);" onclick="delMaster('p', ${i})"></i></li>`).join(""); }
+window.addMaster = (type) => { if(type === 'supplier' && document.getElementById("newSupplier").value) { state.masterSuppliers.push(document.getElementById("newSupplier").value); document.getElementById("newSupplier").value = ""; } if(type === 'product' && document.getElementById("newProduct").value) { state.masterProducts.push(document.getElementById("newProduct").value); document.getElementById("newProduct").value = ""; } saveData(); initMasterData(); };
+window.delMaster = (type, index) => { if(type === 's') state.masterSuppliers.splice(index, 1); else state.masterProducts.splice(index, 1); saveData(); initMasterData(); };
 
-// Inventar & Historie (V6 Inkl. farbiger Lagerplätze)
+// Inventory & History
 function renderInventory(filter = "") {
-    document.getElementById("inventoryBody").innerHTML = state.inventory.filter(i => i.barcode.toLowerCase().includes(filter.toLowerCase()) || i.product.toLowerCase().includes(filter.toLowerCase())).map(i => `
-        <tr>
-            <td><b>${i.barcode}</b></td><td>${i.product}</td>
-            <td><span class="badge badge-success">${i.qty} Stk</span></td>
-            <td><span class="badge ${i.location === 'Sperrlager' ? 'badge-danger' : 'badge-success'}"><i class="fas fa-map-marker-alt"></i> ${i.location}</span></td>
-            <td class="admin-only ${state.currentUser.role !== 'admin' ? 'hidden' : ''}">
-                <button class="btn btn-outline" onclick="editInv('${i.barcode}')"><i class="fas fa-edit"></i></button>
-            </td>
-        </tr>
-    `).join("");
+    document.getElementById("inventoryBody").innerHTML = state.inventory.filter(i => i.barcode.toLowerCase().includes(filter.toLowerCase()) || i.product.toLowerCase().includes(filter.toLowerCase())).map(i => `<tr><td><b>${i.barcode}</b></td><td>${i.product}</td><td><span class="badge badge-success">${i.qty} Stk</span></td><td><span class="badge ${i.location === 'Sperrlager' ? 'badge-danger' : 'badge-success'}"><i class="fas fa-map-marker-alt"></i> ${i.location}</span></td><td class="admin-only ${state.currentUser.role !== 'admin' ? 'hidden' : ''}"><button class="btn btn-outline" onclick="editInv('${i.barcode}')"><i class="fas fa-edit"></i></button></td></tr>`).join("");
 }
-
 function renderHistory(filter = "") {
-    document.getElementById("historyBody").innerHTML = state.records.filter(r => r.note.toLowerCase().includes(filter.toLowerCase()) || r.supplier.toLowerCase().includes(filter.toLowerCase())).map(r => `
-        <tr>
-            <td>${r.date} <small>${r.time}</small></td><td>${r.user}</td>
-            <td><b>${r.supplier}</b><br><small>LS: ${r.note}</small></td>
-            <td>${r.product}</td><td>${r.qtyIst}</td>
-            <td><span class="badge ${r.status === 'Einlagern' ? 'badge-success' : 'badge-danger'}">${r.status}</span></td>
-            <td class="admin-only ${state.currentUser.role !== 'admin' ? 'hidden' : ''}">
-                <button class="btn btn-outline" onclick="editHist(${r.id})"><i class="fas fa-edit"></i></button>
-            </td>
-        </tr>
-    `).join("");
+    document.getElementById("historyBody").innerHTML = state.records.filter(r => r.note.toLowerCase().includes(filter.toLowerCase()) || r.supplier.toLowerCase().includes(filter.toLowerCase())).map(r => `<tr><td>${formatDate(r.date)} <small>${r.time}</small></td><td>${r.user}</td><td><b>${r.supplier}</b><br><small>LS: ${r.note}</small></td><td>${r.product}</td><td>${r.qtyIst}</td><td><span class="badge ${r.status === 'Einlagern' ? 'badge-success' : 'badge-danger'}">${r.status}</span></td><td class="admin-only ${state.currentUser.role !== 'admin' ? 'hidden' : ''}"><button class="btn btn-outline" onclick="editHist(${r.id})"><i class="fas fa-edit"></i></button></td></tr>`).join("");
 }
+document.getElementById("searchInventory").addEventListener("input", (e) => renderInventory(e.target.value)); document.getElementById("searchHistory").addEventListener("input", (e) => renderHistory(e.target.value));
+window.editInv = (barcode) => { let item = state.inventory.find(i => i.barcode === barcode); let nQty = prompt(`Neuer Bestand für ${item.product}:`, item.qty); if(nQty !== null && !isNaN(nQty)) { item.qty = parseInt(nQty); saveData(); renderInventory(); renderDashboard(); } };
+window.editHist = (id) => { let rec = state.records.find(r => r.id === id); let nNote = prompt("Lieferscheinnummer korrigieren:", rec.note); if(nNote !== null) { rec.note = nNote; saveData(); renderHistory(); } };
 
-document.getElementById("searchInventory").addEventListener("input", (e) => renderInventory(e.target.value));
-document.getElementById("searchHistory").addEventListener("input", (e) => renderHistory(e.target.value));
-
-window.editInv = (barcode) => {
-    let item = state.inventory.find(i => i.barcode === barcode);
-    let nQty = prompt(`Neuer Bestand für ${item.product}:`, item.qty);
-    if(nQty !== null && !isNaN(nQty)) { item.qty = parseInt(nQty); saveData(); renderInventory(); renderDashboard(); }
-};
-window.editHist = (id) => {
-    let rec = state.records.find(r => r.id === id);
-    let nNote = prompt("Lieferscheinnummer korrigieren:", rec.note);
-    if(nNote !== null) { rec.note = nNote; saveData(); renderHistory(); }
-};
-
-// Benutzerverwaltung
-function renderUsers() {
-    document.getElementById("userTableBody").innerHTML = state.users.map(u => `
-        <tr>
-            <td>${u.email}</td><td><span class="badge ${u.role === 'admin' ? 'badge-danger' : 'badge-success'}">${u.role}</span></td>
-            <td><button class="btn btn-danger" onclick="delUser('${u.email}')" ${u.email === state.currentUser.email ? 'disabled' : ''}><i class="fas fa-trash"></i></button></td>
-        </tr>
-    `).join("");
-}
-document.getElementById("saveUserBtn").addEventListener("click", () => {
-    const e = document.getElementById("newUserEmail").value; const p = document.getElementById("newUserPassword").value;
-    if(!e || !p) return alert("Felder ausfüllen");
-    state.users.push({email: e, password: p, role: document.getElementById("newUserRole").value});
-    saveData(); renderUsers();
-});
+// Users
+function renderUsers() { document.getElementById("userTableBody").innerHTML = state.users.map(u => `<tr><td>${u.email}</td><td><span class="badge ${u.role === 'admin' ? 'badge-danger' : 'badge-success'}">${u.role}</span></td><td><button class="btn btn-danger" onclick="delUser('${u.email}')" ${u.email === state.currentUser.email ? 'disabled' : ''}><i class="fas fa-trash"></i></button></td></tr>`).join(""); }
+document.getElementById("saveUserBtn").addEventListener("click", () => { const e = document.getElementById("newUserEmail").value; const p = document.getElementById("newUserPassword").value; if(!e || !p) return alert("Felder ausfüllen"); state.users.push({email: e, password: p, role: document.getElementById("newUserRole").value}); saveData(); renderUsers(); });
 window.delUser = (email) => { state.users = state.users.filter(u => u.email !== email); saveData(); renderUsers(); };
 
-// CSV Export
-document.getElementById("exportCsvBtn").addEventListener("click", () => {
-    let csv = "Datum;Mitarbeiter;Lieferant;Lieferschein;Produkt;Barcode;Menge;Status\n";
-    state.records.forEach(r => csv += `${r.date} ${r.time};${r.user};${r.supplier};${r.note};${r.product};${r.barcode};${r.qtyIst};${r.status}\n`);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "wareneingang_historie.csv"; link.click();
-});
+// CSV
+document.getElementById("exportCsvBtn").addEventListener("click", () => { let csv = "Datum;Zeit;Mitarbeiter;Lieferant;Lieferschein;Produkt;Barcode;Menge;Status\n"; state.records.forEach(r => csv += `${formatDate(r.date)};${r.time};${r.user};${r.supplier};${r.note};${r.product};${r.barcode};${r.qtyIst};${r.status}\n`); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "wareneingang_historie.csv"; link.click(); });
 </script>
 
 </body>
