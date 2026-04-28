@@ -2,134 +2,219 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogiTrack Enterprise | Ultimate V8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LogiTrack Enterprise V10 - Advanced Cloud</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         :root {
-            /* Light Theme Variables */
-            --primary: #0f172a; --primary-light: #1e293b; --accent: #2563eb; --accent-hover: #1d4ed8;
-            --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --bg: #f8fafc;
-            --card-bg: #ffffff; --text-main: #334155; --text-muted: #64748b; --border: #e2e8f0;
-            --sidebar-width: 280px;
+            --primary: #0d1117; --primary-light: #161b22; --accent: #2563eb; --accent-hover: #1d4ed8;
+            --success: #059669; --warning: #d97706; --danger: #dc2626; --bg: #f1f5f9;
+            --card-bg: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
+            --sidebar-width: 260px; --radius: 10px; --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
         }
-
-        /* Dark Mode Overrides */
         body.dark-mode {
-            --bg: #020617; --card-bg: #0f172a; --text-main: #f8fafc; --text-muted: #94a3b8;
-            --border: #334155; --primary: #020617; --primary-light: #0f172a;
+            --bg: #0d1117; --card-bg: #161b22; --text-main: #e6edf3; --text-muted: #8b949e;
+            --border: #30363d; --primary: #010409; --primary-light: #0d1117;
         }
+        body.font-small { font-size: 0.875rem; }
+        body.font-large  { font-size: 1.1rem; }
+        body.compact-ui .card { padding: 14px; margin-bottom: 12px; }
+        body.compact-ui th, body.compact-ui td { padding: 8px 12px; }
 
-        /* Font Sizes */
-        body.font-small { font-size: 0.85rem; }
-        body.font-large { font-size: 1.15rem; }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background 0.3s, color 0.3s; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-main); height: 100vh; overflow: hidden; transition: background .25s, color .25s; margin: 0; }
         .hidden { display: none !important; }
 
-        /* --- UI COMPONENTS --- */
-        .btn { padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95em; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* Buttons */
+        .btn { padding: 10px 18px; border-radius: var(--radius); border: none; cursor: pointer; font-weight: 600; font-size: 0.875rem; display: inline-flex; align-items: center; justify-content: gap: 7px; transition: all .15s; white-space: nowrap; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-danger  { background: var(--danger);  color: #fff; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
         .btn-outline:hover { background: var(--border); }
+        .btn-sm { padding: 7px 12px; font-size: 0.8rem; }
 
-        .card { background: var(--card-bg); padding: 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 24px; transition: 0.3s; }
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
-        .badge-success { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-        .badge-warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-        .badge-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-        .badge-info { background: rgba(37, 99, 235, 0.15); color: #2563eb; }
+        /* Cards & Badges */
+        .card { background: var(--card-bg); padding: 22px; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 20px; transition: background .25s, border-color .25s; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: .3px; }
+        .badge-success { background: rgba(5,150,105,.12);  color: #059669; }
+        .badge-warning { background: rgba(217,119,6,.12);  color: #d97706; }
+        .badge-danger  { background: rgba(220,38,38,.12);  color: #dc2626; }
+        .badge-info    { background: rgba(37,99,235,.12);  color: #2563eb; }
+        .badge-out     { background: rgba(124,58,237,.12); color: #7c3aed; }
+        .badge-gray    { background: rgba(100,116,139,.12); color: #64748b; }
 
-        /* Compact UI */
-        body.compact-ui .card { padding: 15px; margin-bottom: 15px; }
-        body.compact-ui .btn { padding: 8px 12px; }
-        body.compact-ui .input-group { margin-bottom: 8px; }
-        body.compact-ui th, body.compact-ui td { padding: 8px; }
+        /* Low Stock Highlighting */
+        tr.low-stock { background-color: rgba(220, 38, 38, 0.05); }
+        tr.low-stock td { border-bottom: 1px solid rgba(220, 38, 38, 0.15); }
 
-        /* --- LAYOUT --- */
-        #app { display: grid; grid-template-columns: var(--sidebar-width) 1fr; height: 100vh; }
-        .sidebar { background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; overflow-y: auto; border-right: 1px solid var(--border); }
-        .sidebar-brand { font-size: 1.5em; font-weight: 700; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; color: white; }
-        .nav-item { padding: 14px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 5px; display: flex; align-items: center; gap: 12px; color: #cbd5e1; font-weight: 500; transition: 0.2s; }
-        .nav-item:hover, .nav-item.active { background: var(--primary-light); color: white; border-left: 4px solid var(--accent); }
-        .nav-group-title { font-size: 0.75rem; text-transform: uppercase; color: #64748b; margin: 15px 0 5px 10px; font-weight: 700; letter-spacing: 1px; }
+        /* Layout */
+        #app { display: flex; flex-direction: row; height: 100vh; width: 100vw; overflow: hidden; }
+        .sidebar { background: var(--primary); color: #fff; padding: 20px 16px; width: var(--sidebar-width); flex-shrink: 0; display: flex; flex-direction: column; overflow-y: auto; border-right: 1px solid rgba(255,255,255,.06); z-index: 1000; transition: transform 0.3s ease; }
+        .sidebar-brand { font-size: 1.2rem; font-weight: 700; margin-bottom: 28px; padding: 0 8px; display: flex; align-items: center; gap: 10px; color: #fff; letter-spacing: -.3px; }
+        .sidebar-brand span { color: var(--accent); }
+        .sidebar-brand img { max-height: 32px; border-radius: 4px; }
+        .nav-group-title { font-size: 0.68rem; text-transform: uppercase; color: #4b5563; margin: 16px 8px 6px; font-weight: 700; letter-spacing: 1.2px; }
+        .nav-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; display: flex; align-items: center; gap: 10px; color: #8b949e; font-weight: 500; font-size: 0.875rem; transition: all .15s; }
+        .nav-item i { width: 16px; text-align: center; }
+        .nav-item:hover { background: var(--primary-light); color: #e6edf3; }
+        .nav-item.active { background: rgba(37,99,235,.2); color: #fff; border-left: 3px solid var(--accent); padding-left: 9px; }
         
-        .main-content { padding: 40px; overflow-y: auto; background: var(--bg); height: 100vh; position: relative; }
-        .page-header { margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .page-header h2 { font-size: 1.8em; color: var(--text-main); }
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+        .main-content { padding: 32px 36px; overflow-y: auto; background: var(--bg); flex-grow: 1; }
+        .page-header { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .page-header h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -.4px; }
 
-        /* --- FORMS & INPUTS --- */
-        .input-group { margin-bottom: 16px; display: flex; flex-direction: column; }
-        .input-group label { margin-bottom: 6px; font-size: 0.9em; font-weight: 600; color: var(--text-muted); }
-        input, select, textarea { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 1em; background: var(--bg); color: var(--text-main); transition: 0.2s; }
-        input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        
-        .radio-group { display: flex; gap: 10px; }
-        .radio-btn { flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--bg); transition: 0.2s; }
-        .radio-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        /* Mobile Header & Overlay */
+        .mobile-header { display: none; background: var(--card-bg); padding: 14px 20px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); z-index: 900; }
+        .mobile-header-brand { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--text-main); }
+        #mobileMenuBtn { padding: 12px 18px; font-size: 1.4rem; border-radius: 10px; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 999; backdrop-filter: blur(2px); opacity: 0; transition: opacity 0.3s; }
 
-        /* --- SIGNATURE & CHARTS --- */
-        #signature-pad { border: 2px dashed var(--border); background: #fff; border-radius: 8px; cursor: crosshair; width: 100%; }
-        .chart-container { position: relative; height: 300px; width: 100%; }
-        .chart-container-small { position: relative; height: 200px; width: 100%; }
+        /* Grid Utilities */
+        .grid-2-auto { display: grid; grid-template-columns: 2fr 1.4fr; gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-input-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .grid-input-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
-        /* --- TABLES & SEARCH --- */
-        .search-box { position: relative; max-width: 400px; margin-bottom: 15px; }
-        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        .search-box input { padding-left: 40px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 16px; background: var(--bg); font-size: 0.85em; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); }
-        td { padding: 16px; border-bottom: 1px solid var(--border); }
-        tr:hover td { background: var(--bg); }
+        /* Forms */
+        .input-group { margin-bottom: 14px; display: flex; flex-direction: column; }
+        .input-group label { margin-bottom: 5px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
+        input, select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-main); transition: border-color .2s, box-shadow .2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+        .radio-group { display: flex; gap: 8px; }
+        .radio-btn { flex: 1; text-align: center; padding: 10px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; background: var(--bg); transition: all .15s; }
+        .radio-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-        /* --- WIZARD --- */
-        .wizard-steps { display: flex; justify-content: space-between; margin-bottom: 30px; background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); }
-        .step-indicator { flex: 1; text-align: center; color: var(--text-muted); font-weight: 600; font-size: 0.9em; }
-        .step-indicator.active { color: var(--accent); }
+        /* Signature & Charts */
+        #signature-pad { border: 2px dashed var(--border); background: #fff; border-radius: 8px; cursor: crosshair; width: 100%; touch-action: none; }
+        .chart-container        { position: relative; height: 280px; width: 100%; }
+        .chart-container-small { position: relative; height: 180px; width: 100%; }
+
+        /* Search */
+        .search-box { position: relative; margin-bottom: 14px; }
+        .search-box i.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
+        .search-box input { padding-left: 36px; }
+
+        /* Table */
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 650px; }
+        th { text-align: left; padding: 12px 16px; background: var(--bg); font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 2px solid var(--border); font-weight: 700; letter-spacing: .5px; }
+        td { padding: 13px 16px; border-bottom: 1px solid var(--border); }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover td { background: rgba(37,99,235,.03); }
+
+        /* Wizard */
+        .wizard-steps { display: flex; align-items: center; margin-bottom: 24px; background: var(--card-bg); padding: 16px 20px; border-radius: 12px; border: 1px solid var(--border); gap: 4px; flex-wrap: wrap; }
+        .step-indicator { flex: 1; min-width: 120px; text-align: center; color: var(--text-muted); font-weight: 600; font-size: 0.8rem; padding: 6px; border-radius: 6px; transition: all .2s; }
+        .step-indicator.active    { color: var(--accent); background: rgba(37,99,235,.08); }
         .step-indicator.completed { color: var(--success); }
-        .step-content { animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .step-content { animation: fadeUp .25s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MODAL (POPUP) --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--card-bg); width: 90%; max-width: 600px; border-radius: 16px; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .preview-box { border: 1px solid var(--border); background: var(--bg); padding: 20px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 0.9em; }
+        /* Modals */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: flex; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(6px); padding: 16px; }
+        .modal-content { background: var(--card-bg); width: 100%; max-width: 520px; border-radius: 16px; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,.4); border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+        .preview-box { border: 1px solid var(--border); background: var(--bg); padding: 16px; border-radius: 8px; margin: 16px 0; font-family: 'DM Mono', monospace; font-size: 0.82rem; line-height: 1.7; }
+        .detail-img { max-width: 100%; border-radius: 8px; margin-top: 10px; border: 1px solid var(--border); }
 
-        /* --- LOGIN --- */
-        #loginPage { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary) 0%, #000000 100%); }
+        /* Camera Scanner */
+        #scanner-video { width: 100%; border-radius: 8px; background: #000; max-height: 300px; object-fit: cover; }
+        #scanner-result { margin-top: 12px; padding: 10px 14px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border); font-family: 'DM Mono', monospace; font-size: 0.85rem; min-height: 40px; word-break: break-all; }
+        .scanner-overlay { position: relative; }
+        .scanner-corner { position: absolute; width: 24px; height: 24px; border-color: var(--accent); border-style: solid; }
+        .scanner-corner.tl { top: 6px; left: 6px; border-width: 3px 0 0 3px; border-radius: 3px 0 0 3px; }
+        .scanner-corner.tr { top: 6px; right: 6px; border-width: 3px 3px 0 0; border-radius: 0 3px 0 0; }
+        .scanner-corner.bl { bottom: 6px; left: 6px; border-width: 0 0 3px 3px; border-radius: 0 0 0 3px; }
+        .scanner-corner.br { bottom: 6px; right: 6px; border-width: 0 3px 3px 0; border-radius: 0 0 3px 0; }
+        .scan-line { position: absolute; left: 10%; right: 10%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: scanAnim 2s ease-in-out infinite; top: 50%; }
+        @keyframes scanAnim { 0%,100% { top: 20%; opacity: .5; } 50% { top: 80%; opacity: 1; } }
 
-        /* --- PRINT STYLES (A4 & LABEL) --- */
+        /* Label Modal */
+        #label-preview-box { background: #fff; border: 2px solid #000; border-radius: 6px; padding: 12px 16px; display: flex; align-items: center; gap: 14px; color: #000; margin: 16px 0; }
+        #label-preview-box .lbl-text { font-family: sans-serif; font-size: 11px; line-height: 1.5; flex: 1; word-break: break-all; }
+        #label-preview-box .lbl-text strong { font-size: 13px; display: block; margin-bottom: 2px; }
+
+        /* Stats */
+        .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: var(--card-bg); padding: 18px 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: .5px; margin-bottom: 6px; }
+        .stat-value { font-size: 2rem; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+
+        /* Input with scan button */
+        .input-scan-wrap { position: relative; }
+        .input-scan-wrap input { padding-right: 90px; }
+        .input-scan-trigger { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 5px 11px; font-size: 0.75rem; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+        /* Login */
+        #loginPage { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0d1117 0%, #1a2035 50%, #0d1117 100%); padding: 16px; }
+        .login-card { background: var(--card-bg); width: 100%; max-width: 380px; border-radius: 16px; padding: 36px; border: 1px solid var(--border); box-shadow: 0 25px 60px rgba(0,0,0,.5); }
+        .login-logo { width: 64px; height: 64px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden;}
+        .login-logo img { width: 100%; height: 100%; object-fit: contain; background: white; }
+
+        /* QA Additions */
+        #qa-details-box { background: rgba(220,38,38,0.04); border: 1px solid rgba(220,38,38,0.2); padding: 16px; border-radius: 8px; margin-top: 16px; }
+        #qa-details-box label { color: var(--danger); }
+
+        /* Rollen-System Sichtbarkeiten */
+        body.role-employee .manager-up,
+        body.role-employee .admin-up { display: none !important; }
+
+        body.role-manager .admin-up { display: none !important; }
+
+        body.role-praktikant .manager-up,
+        body.role-praktikant .admin-up,
+        body.role-praktikant .action-col { display: none !important; }
+
+        /* Print Area */
         #printAreaA4, #printAreaLabel { display: none; }
-        
         @media print {
             body { background: white !important; color: black !important; }
-            #app, #loginPage, .modal-overlay { display: none !important; }
-            
-            /* Print A4 Mode */
-            body.print-mode-a4 #printAreaA4 { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 40px; background: white; color: black; }
-            body.print-mode-a4 .print-header { border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+            #app, #loginPage, .modal-overlay, #aiChatToggle, #aiChatWindow { display: none !important; }
+            body.print-mode-a4 #printAreaA4 { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 40px; }
             body.print-mode-a4 .print-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
-            body.print-mode-a4 .print-table th, body.print-mode-a4 .print-table td { border: 1px solid #000; padding: 12px; text-align: left; }
-            body.print-mode-a4 .print-sign-area { margin-top: 50px; border-top: 1px solid #000; width: 300px; padding-top: 10px; }
-            
-            /* Print Label Mode (z.B. Zebra Drucker 62x29mm) */
-            body.print-mode-label #printAreaLabel { 
-                display: flex; flex-direction: row; align-items: center; justify-content: space-between;
-                width: 100%; height: 100%; padding: 5px; background: white; color: black; font-family: sans-serif;
-            }
-            body.print-mode-label #label-qr { width: 60px; height: 60px; }
-            body.print-mode-label .label-text { font-size: 12px; line-height: 1.2; margin-left: 10px; flex-grow: 1; }
-            @page { margin: 0; } /* Removes default browser headers/footers for clean label */
+            body.print-mode-a4 .print-table th, body.print-mode-a4 .print-table td { border: 1px solid #000; padding: 10px; }
+            body.print-mode-a4 .print-header { border-bottom: 3px solid #000; padding-bottom: 16px; margin-bottom: 24px; }
+            body.print-mode-label #printAreaLabel { display: flex; flex-direction: row; align-items: center; width: 100%; height: 100%; padding: 4px; background: white; color: black; }
+            body.print-mode-label #label-qr-print { width: 60px; height: 60px; }
+            body.print-mode-label .label-text { font-size: 11px; line-height: 1.3; margin-left: 8px; font-family: sans-serif; }
+            @page { margin: 0; }
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1200px) {
+            .stat-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 1024px) {
+            .grid-2-auto { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+            .mobile-header { display: flex; }
+            .sidebar { position: fixed; left: -100%; top: 0; bottom: 0; height: 100vh; transform: translateX(0); box-shadow: 4px 0 15px rgba(0,0,0,0.3); }
+            .sidebar.open { left: 0; }
+            .sidebar-overlay.open { display: block; opacity: 1; }
+            .main-content { padding: 20px 16px; }
+            .grid-2, .grid-input-2, .grid-input-3 { grid-template-columns: 1fr; gap: 0; }
+            .wizard-steps { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px; }
+            .step-indicator { padding: 10px; }
+            .page-header h2 { font-size: 1.25rem; }
+            .card { padding: 16px; }
+            .login-card { padding: 24px; }
+        }
+        @media (max-width: 480px) {
+            .stat-grid { grid-template-columns: 1fr; gap: 12px; }
+            .modal-content { padding: 20px 16px; }
         }
     </style>
 </head>
@@ -137,751 +222,1691 @@
 
 <div id="printAreaA4">
     <div class="print-header">
-        <h1 style="font-family: 'Inter', sans-serif;">WARENBEGLEITSCHEIN</h1>
-        <p style="color: #666;">LogiTrack Enterprise System V8</p>
+        <h1 style="font-family:'DM Sans',sans-serif; letter-spacing:-1px;">WARENBEGLEITSCHEIN</h1>
+        <p style="color:#666; font-size:0.85rem;">LogiTrack Enterprise V10</p>
     </div>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; font-size: 1.1rem;">
-        <div>
-            <strong>Datum / Zeit:</strong> <span id="p-date"></span><br><br>
-            <strong>Mitarbeiter:</strong> <span id="p-user"></span><br><br>
-            <strong>Lieferant:</strong> <span id="p-supplier"></span>
-        </div>
-        <div style="text-align: right;">
-            <strong>Lieferschein-Nr:</strong> <span id="p-note"></span><br><br>
-            <strong>Vorgang-ID:</strong> <span id="p-id"></span>
-        </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;font-size:0.95rem;line-height:1.8;">
+        <div><strong>Datum / Zeit:</strong> <span id="p-date"></span><br><strong>Mitarbeiter:</strong> <span id="p-user"></span><br><strong>Lieferant:</strong> <span id="p-supplier"></span></div>
+        <div style="text-align:right;"><strong>Lieferschein-Nr:</strong> <span id="p-note"></span><br><strong>Vorgang-ID:</strong> <span id="p-id"></span></div>
     </div>
-
     <table class="print-table">
-        <tr style="background: #eee;">
-            <th>Artikel / Kategorie</th>
-            <th>Barcode / SN</th>
-            <th>Menge</th>
-            <th>Aktion / Ziel</th>
-        </tr>
-        <tr>
-            <td id="p-product"></td>
-            <td id="p-barcode"></td>
-            <td id="p-qty"></td>
-            <td id="p-status" style="font-weight: bold;"></td>
-        </tr>
+        <tr style="background:#eee;"><th>Artikel / Kategorie</th><th>Barcode / SN</th><th>Menge</th><th>Lagerort</th></tr>
+        <tr><td id="p-product"></td><td id="p-barcode"></td><td id="p-qty"></td><td id="p-status" style="font-weight:bold;"></td></tr>
     </table>
-
-    <div style="margin-top: 60px; display: flex; justify-content: space-between;">
-        <div class="print-sign-area">
+    <div style="margin-top:50px;display:flex;justify-content:space-between;">
+        <div style="border-top:1px solid #000;width:280px;padding-top:8px;font-size:0.85rem;">
             <p>Datum, Unterschrift Mitarbeiter</p>
-            <img id="p-signature-img" src="" style="width: 100%; max-height: 100px; object-fit: contain; display: none;">
+            <img id="p-signature-img" src="" style="width:100%;max-height:90px;object-fit:contain;display:none;">
         </div>
     </div>
 </div>
 
 <div id="printAreaLabel">
-    <div id="label-qr"></div>
+    <div id="label-qr-print"></div>
     <div class="label-text">
-        <strong style="font-size: 14px;" id="l-product"></strong><br>
+        <strong id="l-product"></strong><br>
         <span id="l-barcode"></span><br>
         Datum: <span id="l-date"></span><br>
         Menge: <b id="l-qty"></b> Stk.
     </div>
 </div>
 
+<div id="scannerModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-camera" style="color:var(--accent)"></i> Kamera-Scanner</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:6px 0 14px;">Richten Sie die Kamera auf einen Barcode oder QR-Code.</p>
+        <div class="scanner-overlay">
+            <video id="scanner-video" playsinline autoplay muted></video>
+            <div class="scanner-corner tl"></div>
+            <div class="scanner-corner tr"></div>
+            <div class="scanner-corner bl"></div>
+            <div class="scanner-corner br"></div>
+            <div class="scan-line"></div>
+        </div>
+        <div id="scanner-result">Warte auf Scan...</div>
+        <div id="scannerCameraSelect" style="margin-top:10px;"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:16px;gap:10px;">
+            <select id="cameraSelect" style="flex:1;"></select>
+            <button class="btn btn-outline" id="btnCloseScanner"><i class="fas fa-times"></i> Schließen</button>
+        </div>
+    </div>
+</div>
+
+<div id="labelModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-tag" style="color:var(--accent)"></i> Etikett drucken</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:6px 0;">Vorschau des Etiketts für diesen Artikel.</p>
+        <div id="label-preview-box">
+            <div id="label-modal-qr"></div>
+            <div class="lbl-text">
+                <strong id="lm-product"></strong>
+                <span id="lm-barcode"></span><br>
+                Bestand: <b id="lm-qty"></b> Stk.<br>
+                Lager: <span id="lm-location"></span>
+            </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;">
+            <button class="btn btn-outline" onclick="document.getElementById('labelModal').classList.add('hidden')">Abbrechen</button>
+            <button class="btn btn-primary" id="btnPrintLabelItem"><i class="fas fa-print"></i> Etikett drucken</button>
+        </div>
+    </div>
+</div>
+
 <div id="printModal" class="modal-overlay hidden">
     <div class="modal-content">
-        <h2 style="color: var(--success); display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-check-circle"></i> Erfolgreich verbucht!
-        </h2>
-        <p style="margin-top: 10px;">Die Daten wurden revisionssicher gespeichert. Was möchten Sie drucken?</p>
-        
+        <div class="modal-title" style="color:var(--success)"><i class="fas fa-check-circle"></i> Erfolgreich verbucht!</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:6px 0;">Daten wurden revisionssicher gespeichert. Drucken?</p>
         <div class="preview-box">
-            <b>Zusammenfassung:</b><br><br>
-            Art: <span id="prev-product"></span> (<span id="prev-qty"></span> Stk)<br>
-            Ziel/Aktion: <span id="prev-status"></span><br>
+            Artikel: <b><span id="prev-product"></span></b> (<span id="prev-qty"></span> Stk)<br>
+            Lagerort: <span id="prev-status"></span><br>
             Barcode: <span id="prev-barcode"></span>
         </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-outline" id="btnSkipPrint">Überspringen</button>
-            <button class="btn btn-primary" id="btnDoPrintLabel" style="background: var(--text-main);"><i class="fas fa-tags"></i> Etikett</button>
+            <button class="btn btn-outline" id="btnDoPrintLabel"><i class="fas fa-tags"></i> Etikett</button>
             <button class="btn btn-primary" id="btnDoPrintA4"><i class="fas fa-print"></i> A4 Beleg</button>
         </div>
     </div>
 </div>
 
+<div id="detailsModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-title"><i class="fas fa-info-circle" style="color:var(--accent)"></i> Vorgangs-Details</div>
+        <div id="details-content" class="preview-box" style="font-family:'DM Sans',sans-serif; font-size:0.9rem;"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+            <button class="btn btn-outline" onclick="document.getElementById('detailsModal').classList.add('hidden')">Schließen</button>
+        </div>
+    </div>
+</div>
+
 <div id="loginPage">
-    <div class="card" style="width: 100%; max-width: 400px; text-align: center; padding: 40px; background: white; color: black;">
-        <i class="fas fa-microchip fa-3x" style="color: #2563eb; margin-bottom: 20px;"></i>
-        <h2 style="margin-bottom: 30px;">LogiTrack Login</h2>
-        <div class="input-group" style="text-align: left;">
-            <label style="color: #334155;">Benutzername</label>
-            <input type="text" id="loginEmail" placeholder="admin oder lager" style="background: #f8fafc; color: black;">
-        </div>
-        <div class="input-group" style="text-align: left;">
-            <label style="color: #334155;">Passwort</label>
-            <input type="password" id="loginPassword" placeholder="••••••••" style="background: #f8fafc; color: black;">
-        </div>
-        <button class="btn" style="background: #2563eb; color: white; width: 100%; margin-top: 10px;" id="loginBtn">Anmelden</button>
-        <p id="loginError" style="color: #ef4444; margin-top: 15px; font-weight: 600;"></p>
+    <div class="login-card">
+        <div class="login-logo" id="mainLoginLogo"><i class="fas fa-boxes-stacked" style="color:#fff;font-size:1.6rem;"></i></div>
+        <h2 style="font-size:1.4rem;font-weight:700;letter-spacing:-.5px;margin-bottom:4px;">LogiTrack V10</h2>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:24px;">Advanced Enterprise Edition</p>
+        <div class="input-group"><label>Benutzername</label><input type="text" id="loginEmail" placeholder="Benutzername" autocomplete="username"></div>
+        <div class="input-group"><label>Passwort</label><input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password"></div>
+        <button class="btn btn-primary" id="loginBtn" style="width:100%;margin-top:6px;padding:12px;font-size:0.95rem;">Anmelden</button>
+        <p id="loginError" style="color:var(--danger);margin-top:12px;font-size:0.85rem;font-weight:600;"></p>
     </div>
 </div>
 
 <div id="app" class="hidden">
-    <aside class="sidebar">
-        <div class="sidebar-brand"><i class="fas fa-boxes-stacked"></i> LogiTrack V8</div>
-        <nav style="flex-grow: 1;">
+    
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand" id="sidebarBrandDiv"><i class="fas fa-boxes-stacked" style="color:var(--accent);"></i> Logi<span>Track</span></div>
+        <nav style="flex-grow:1;">
             <div class="nav-group-title">Lager & Prozesse</div>
-            <div class="nav-item active" data-page="dashPage" id="navDash"><i class="fas fa-chart-pie"></i> Dashboard</div>
-            <div class="nav-item" data-page="receivePage" id="navRec"><i class="fas fa-download"></i> Wareneingang</div>
-            <div class="nav-item" data-page="outboundPage"><i class="fas fa-upload"></i> Warenausgang</div>
+            <div class="nav-item active" data-page="dashPage"><i class="fas fa-chart-pie"></i> Dashboard</div>
+            <div class="nav-item action-col" data-page="receivePage"><i class="fas fa-download"></i> Wareneingang</div>
+            <div class="nav-item action-col" data-page="outboundPage"><i class="fas fa-upload"></i> Warenausgang</div>
             <div class="nav-item" data-page="inventoryPage"><i class="fas fa-cubes"></i> Warenbestand</div>
             <div class="nav-item" data-page="historyPage"><i class="fas fa-list-ul"></i> Historie</div>
             
-            <div class="nav-group-title" style="margin-top: 20px;">Verwaltung & System</div>
-            <div class="nav-item admin-only" data-page="auditPage"><i class="fas fa-shield-alt"></i> Audit-Log</div>
-            <div class="nav-item admin-only" data-page="masterDataPage"><i class="fas fa-database"></i> Stammdaten</div>
-            <div class="nav-item admin-only" data-page="userPage"><i class="fas fa-users-cog"></i> Benutzer</div>
-            <div class="nav-item" data-page="settingsPage"><i class="fas fa-sliders-h"></i> Einstellungen</div>
-            <div class="nav-item" data-page="faqPage"><i class="fas fa-question-circle"></i> Hilfe / FAQ</div>
+            <div class="nav-group-title manager-up" style="margin-top:16px;">Verwaltung</div>
+            <div class="nav-item admin-up" data-page="auditPage"><i class="fas fa-shield-alt"></i> Audit-Log</div>
+            <div class="nav-item manager-up" data-page="masterDataPage"><i class="fas fa-database"></i> Stammdaten</div>
+            <div class="nav-item admin-up" data-page="userPage"><i class="fas fa-users-cog"></i> Benutzer</div>
+            <div class="nav-item manager-up" data-page="settingsPage"><i class="fas fa-sliders-h"></i> Einstellungen</div>
+            <div class="nav-item" data-page="faqPage"><i class="fas fa-question-circle"></i> Hilfe</div>
         </nav>
-        <div style="border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px;">
-            <p style="margin-bottom: 10px; font-size: 0.9em;"><i class="fas fa-user-circle"></i> <span id="userNameDisplay"></span></p>
-            <button class="btn btn-outline" id="logoutBtn" style="width: 100%; color: white; border-color: rgba(255,255,255,0.2);"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:16px;margin-top:16px;">
+            <p style="font-size:0.8rem;color:#8b949e;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+                <i class="fas fa-user-circle"></i> <span id="userNameDisplay"></span>
+            </p>
+            <button class="btn btn-outline" id="logoutBtn" style="width:100%;color:#8b949e;border-color:rgba(255,255,255,.1);font-size:0.8rem;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </aside>
 
-    <main class="main-content">
-        
-        <section id="dashPage" class="page-section">
-            <div class="page-header"><h2>Management Dashboard</h2></div>
-            
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
-                <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.8em; text-transform: uppercase;">Eingänge Heute</h3>
-                    <p id="statToday" style="font-size: 2.2em; font-weight: 700; color: var(--accent);">0</p>
-                </div>
-                <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.8em; text-transform: uppercase;">Ausgänge Heute</h3>
-                    <p id="statOutToday" style="font-size: 2.2em; font-weight: 700; color: var(--success);">0</p>
-                </div>
-                <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.8em; text-transform: uppercase;">Teile im Bestand</h3>
-                    <p id="statTotalItems" style="font-size: 2.2em; font-weight: 700; color: var(--text-main);">0</p>
-                </div>
-                <div class="card" style="text-align: center;">
-                    <h3 style="color: var(--text-muted); font-size: 0.8em; text-transform: uppercase;">Mängel / Sperrlager</h3>
-                    <p id="statIssues" style="font-size: 2.2em; font-weight: 700; color: var(--danger);">0</p>
-                </div>
-            </div>
+    <div class="main-wrapper">
+        <div class="mobile-header">
+            <div class="mobile-header-brand"><i class="fas fa-boxes-stacked" style="color:var(--accent);"></i> LogiTrack</div>
+            <button id="mobileMenuBtn" class="btn btn-outline"><i class="fas fa-bars"></i></button>
+        </div>
 
-            <div style="display: grid; grid-template-columns: 2fr 1.5fr; gap: 20px;">
-                <div class="card">
-                    <h3>Wareneingang (7-Tage-Trend)</h3>
-                    <div class="chart-container"><canvas id="trendChart"></canvas></div>
+        <main class="main-content">
+            <section id="dashPage" class="page-section">
+                <div class="page-header"><h2>Dashboard</h2><small style="color:var(--text-muted);font-size:0.8rem;" id="dashDate"></small></div>
+                <div class="stat-grid">
+                    <div class="stat-card"><div class="stat-label">Eingänge Heute</div><div class="stat-value" id="statToday" style="color:var(--accent)">0</div></div>
+                    <div class="stat-card"><div class="stat-label">Ausgänge Heute</div><div class="stat-value" id="statOutToday" style="color:var(--success)">0</div></div>
+                    <div class="stat-card"><div class="stat-label">Teile im Bestand</div><div class="stat-value" id="statTotalItems">0</div></div>
+                    <div class="stat-card"><div class="stat-label" style="color:var(--danger);">Kritischer Bestand</div><div class="stat-value" id="statCritical" style="color:var(--danger)">0</div></div>
+                    <div class="stat-card"><div class="stat-label">Sperrlager / Mängel</div><div class="stat-value" id="statIssues" style="color:var(--warning)">0</div></div>
                 </div>
-                <div class="card" style="display: flex; flex-direction: column; align-items: center;">
-                    <h3 style="align-self: flex-start;">Qualitäts-Tacho (Eingang)</h3>
-                    <div class="chart-container-small" style="margin-top: 20px;"><canvas id="qualityGauge"></canvas></div>
-                    <p style="margin-top: 10px; color: var(--text-muted); font-size: 0.9em; font-weight: 600;" id="gaugeLabel"></p>
-                </div>
-            </div>
-        </section>
-
-        <section id="receivePage" class="page-section hidden">
-            <div class="page-header"><h2>Neuer Wareneingang</h2></div>
-            
-            <div class="wizard-steps">
-                <div class="step-indicator active" id="ind-1">1. Lieferprüfung</div>
-                <div class="step-indicator" id="ind-2">2. Artikelprüfung</div>
-                <div class="step-indicator" id="ind-3">3. Qualitätsprüfung</div>
-                <div class="step-indicator" id="ind-4">4. Abschluss</div>
-            </div>
-
-            <div class="card" id="wizardForm">
-                <div class="step-content" id="step-1">
-                    <h3>Lieferprüfung</h3><hr style="margin: 15px 0; border-top: 1px solid var(--border);">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><label>IT-Lieferant</label><select id="w-supplier" class="master-supplier-list"></select></div>
-                        <div class="input-group"><label>Lieferscheinnummer</label><input type="text" id="w-deliveryNote" required></div>
-                        <div class="input-group"><label>Datum</label><input type="date" id="w-date"></div>
-                        <div class="input-group"><label>Uhrzeit</label><input type="time" id="w-time"></div>
+                <div class="grid-2-auto">
+                    <div class="card">
+                        <h3 style="font-size:0.95rem;margin-bottom:16px;">7-Tage Trend</h3>
+                        <div class="chart-container"><canvas id="trendChart"></canvas></div>
+                    </div>
+                    <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+                        <h3 style="font-size:0.95rem;margin-bottom:8px;align-self:flex-start;">Qualitäts-Quote</h3>
+                        <div class="chart-container-small"><canvas id="qualityGauge"></canvas></div>
+                        <p style="margin-top:6px;color:var(--text-muted);font-size:0.85rem;font-weight:600;" id="gaugeLabel"></p>
                     </div>
                 </div>
+            </section>
 
-                <div class="step-content hidden" id="step-2">
-                    <h3>Artikelprüfung</h3><hr style="margin: 15px 0; border-top: 1px solid var(--border);">
-                    <div class="input-group"><label>Kategorie / Artikelart</label><select id="w-product" class="master-product-list"></select></div>
-                    <div class="input-group"><label>Barcode / Seriennummer (Scanner)</label><input type="text" id="w-barcode" placeholder="Scannen..."></div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><label>Menge bestellt (Soll)</label><input type="number" id="w-qtySoll" value="0"></div>
-                        <div class="input-group"><label>Menge geliefert (Ist)</label><input type="number" id="w-qtyIst" value="0"></div>
-                    </div>
+            <section id="receivePage" class="page-section hidden">
+                <div class="page-header"><h2>Neuer Wareneingang</h2></div>
+                <div class="wizard-steps">
+                    <div class="step-indicator active" id="ind-1"><i class="fas fa-truck"></i> 1. Lieferprüfung</div>
+                    <div class="step-indicator" id="ind-2"><i class="fas fa-barcode"></i> 2. Artikel</div>
+                    <div class="step-indicator" id="ind-3"><i class="fas fa-clipboard-check"></i> 3. Qualität</div>
+                    <div class="step-indicator" id="ind-4"><i class="fas fa-signature"></i> 4. Abschluss</div>
                 </div>
-
-                <div class="step-content hidden" id="step-3">
-                    <h3>Qualitätsprüfung</h3><hr style="margin: 15px 0; border-top: 1px solid var(--border);">
-                    <div class="input-group">
-                        <label>Ist die Verpackung beschädigt?</label>
-                        <div class="radio-group">
-                            <div class="radio-btn" onclick="setRadio(this, 'w-packDamage', 'ja')">Ja (Mangel)</div>
-                            <div class="radio-btn active" onclick="setRadio(this, 'w-packDamage', 'nein')">Nein (OK)</div>
-                            <input type="hidden" id="w-packDamage" value="nein">
+                <div class="card" id="wizardForm">
+                    <div class="step-content" id="step-1">
+                        <h3 style="margin-bottom:16px;">Lieferprüfung</h3>
+                        <div class="grid-input-2">
+                            <div class="input-group"><label>IT-Lieferant</label><select id="w-supplier" class="master-supplier-list"></select></div>
+                            <div class="input-group"><label>Lieferscheinnummer</label><input type="text" id="w-deliveryNote" placeholder="z.B. LS-2024-001"></div>
+                            <div class="input-group"><label>Datum</label><input type="date" id="w-date"></div>
+                            <div class="input-group"><label>Uhrzeit</label><input type="time" id="w-time"></div>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label>Gerät/Funktion in Ordnung?</label>
-                        <div class="radio-group">
-                            <div class="radio-btn active" onclick="setRadio(this, 'w-funcOk', 'ja')">Ja (OK)</div>
-                            <div class="radio-btn" onclick="setRadio(this, 'w-funcOk', 'nein')">Nein (Mangel)</div>
-                            <input type="hidden" id="w-funcOk" value="ja">
+                    <div class="step-content hidden" id="step-2">
+                        <h3 style="margin-bottom:16px;">Artikelprüfung</h3>
+                        <div class="input-group"><label>Kategorie / Artikelart</label><select id="w-product" class="master-product-list"></select></div>
+                        <div class="input-group">
+                            <label>Barcode / Seriennummer</label>
+                            <div class="input-scan-wrap">
+                                <input type="text" id="w-barcode" placeholder="Scannen oder eingeben...">
+                                <button class="input-scan-trigger" onclick="openScanner('w-barcode')"><i class="fas fa-camera"></i> Scannen</button>
+                            </div>
+                        </div>
+                        <div class="grid-input-2">
+                            <div class="input-group"><label>Menge bestellt (Soll)</label><input type="number" id="w-qtySoll" value="0"></div>
+                            <div class="input-group"><label>Menge geliefert (Ist)</label><input type="number" id="w-qtyIst" value="0"></div>
                         </div>
                     </div>
-                </div>
+                    <div class="step-content hidden" id="step-3">
+                        <h3 style="margin-bottom:16px;">Qualitätsprüfung</h3>
+                        <div class="input-group">
+                            <label>Verpackung beschädigt?</label>
+                            <div class="radio-group">
+                                <div class="radio-btn" onclick="setRadio(this,'w-packDamage','ja')">Ja (Mangel)</div>
+                                <div class="radio-btn active" onclick="setRadio(this,'w-packDamage','nein')">Nein (OK)</div>
+                                <input type="hidden" id="w-packDamage" value="nein">
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-top:8px;">
+                            <label>Funktion in Ordnung?</label>
+                            <div class="radio-group">
+                                <div class="radio-btn active" onclick="setRadio(this,'w-funcOk','ja')">Ja (OK)</div>
+                                <div class="radio-btn" onclick="setRadio(this,'w-funcOk','nein')">Nein (Mangel)</div>
+                                <input type="hidden" id="w-funcOk" value="ja">
+                            </div>
+                        </div>
 
-                <div class="step-content hidden" id="step-4">
-                    <h3>Abschluss & Signatur</h3><hr style="margin: 15px 0; border-top: 1px solid var(--border);">
+                        <div id="qa-details-box" class="hidden">
+                            <h4 style="color:var(--danger);margin-bottom:10px;font-size:0.95rem;border-bottom:1px solid rgba(220,38,38,0.2);padding-bottom:5px;"><i class="fas fa-exclamation-triangle"></i> Mangel-Details erfassen</h4>
+                            <div class="input-group" style="margin-top:10px;">
+                                <label>Art des Mangels</label>
+                                <select id="w-qaType">
+                                    <option>Transportschaden (Kartonage defekt)</option>
+                                    <option>Falscher Artikel geliefert</option>
+                                    <option>Teil fehlt (Unvollständig)</option>
+                                    <option>DOA (Gerät ohne Funktion)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Notiz zum Mangel</label>
+                                <textarea id="w-qaNotes" rows="2" placeholder="Was genau ist defekt? (Dient als Vorlage für Reklamations-E-Mail)"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Beweisfoto (Optional)</label>
+                                <input type="file" id="w-qaPhoto" accept="image/*" capture="environment">
+                                <input type="hidden" id="w-qaPhotoBase64">
+                                <small style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;">Wird komprimiert ans System übertragen.</small>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="step-content hidden" id="step-4">
+                        <h3 style="margin-bottom:16px;">Abschluss & Lagerplatz</h3>
+                        <div class="input-group">
+                            <label>Vorgeschlagener Status</label>
+                            <select id="w-status">
+                                <option value="Einlagern">✅ Regulär Einlagern</option>
+                                <option value="Quarantäne">⚠️ Quarantäne / Reklamation (Sperrlager)</option>
+                            </select>
+                        </div>
+                        <div class="grid-2" id="storage-location-div">
+                            <div class="input-group">
+                                <label>Regal</label>
+                                <select id="w-shelf">
+                                    <option value="A">Regal A (Hardware)</option>
+                                    <option value="B">Regal B (Peripherie)</option>
+                                    <option value="C">Regal C (Zubehör)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Fach</label>
+                                <select id="w-slot">
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Digitale Unterschrift (optional)</label>
+                            <canvas id="signature-pad" height="110"></canvas>
+                            <button class="btn btn-outline btn-sm" style="margin-top:6px;width:120px;" onclick="clearSignature()"><i class="fas fa-eraser"></i> Löschen</button>
+                        </div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);">
+                        <button class="btn btn-outline" id="btnPrev" style="visibility:hidden;"><i class="fas fa-chevron-left"></i> Zurück</button>
+                        <button class="btn btn-primary" id="btnNext">Weiter <i class="fas fa-chevron-right"></i></button>
+                        <button class="btn btn-success hidden" id="btnSubmit"><i class="fas fa-save"></i> Speichern</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="outboundPage" class="page-section hidden">
+                <div class="page-header"><h2>Warenausgang</h2></div>
+                <div class="card" style="max-width:600px;margin:0 auto;">
+                    <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:18px;">Scannen Sie den Barcode der Ware. Das System zieht die Menge automatisch vom Bestand ab.</p>
                     <div class="input-group">
-                        <label>Vorgeschlagener Status</label>
-                        <select id="w-status">
-                            <option value="Einlagern">✅ Regulär Einlagern (Hauptlager)</option>
-                            <option value="Quarantäne">⚠️ Quarantäne / Reklamation (Sperrlager)</option>
-                        </select>
+                        <label>Barcode scannen</label>
+                        <div class="input-scan-wrap">
+                            <input type="text" id="outBarcode" placeholder="Barcode hier scannen..." autocomplete="off">
+                            <button class="input-scan-trigger" onclick="openScanner('outBarcode')"><i class="fas fa-camera"></i> Scannen</button>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Digitale Unterschrift (Optional)</label>
-                        <canvas id="signature-pad" height="120"></canvas>
-                        <button class="btn btn-outline" style="margin-top: 8px; width: 150px;" onclick="clearSignature()">Löschen</button>
+                    <div id="outboundDetails" class="hidden" style="background:rgba(37,99,235,.06);padding:14px;border-radius:8px;margin-bottom:16px;border:1px solid rgba(37,99,235,.2);font-size:0.875rem;line-height:1.8;">
+                        <p><b>Artikel:</b> <span id="outProduct"></span></p>
+                        <p><b>Bestand:</b> <span id="outCurrentQty"></span> Stk. — <span id="outLocation"></span></p>
                     </div>
+                    <div class="input-group"><label>Entnommene Menge</label><input type="number" id="outQty" value="1" min="1"></div>
+                    <div class="input-group"><label>Auftragsnummer / Notiz</label><input type="text" id="outNote" placeholder="z.B. Bestellung #4921"></div>
+                    <button class="btn btn-primary" id="btnSubmitOutbound" style="width:100%;padding:12px;"><i class="fas fa-upload"></i> Warenausgang buchen</button>
                 </div>
+            </section>
 
-                <div style="display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
-                    <button class="btn btn-outline" id="btnPrev" style="visibility: hidden;">Zurück</button>
-                    <button class="btn btn-primary" id="btnNext">Weiter</button>
-                    <button class="btn btn-success hidden" id="btnSubmit"><i class="fas fa-save"></i> Speichern</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="outboundPage" class="page-section hidden">
-            <div class="page-header"><h2>Warenausgang / Kommissionierung</h2></div>
-            <div class="card" style="max-width: 600px; margin: 0 auto;">
-                <p style="margin-bottom: 20px; color: var(--text-muted);">Scannen Sie den Barcode der Ware, die das Lager verlässt. Das System zieht die Menge automatisch vom Bestand ab.</p>
-                <div class="input-group">
-                    <label>Barcode scannen</label>
-                    <input type="text" id="outBarcode" placeholder="Barcode hier scannen..." autocomplete="off">
-                </div>
-                <div id="outboundDetails" class="hidden" style="background: rgba(37, 99, 235, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid rgba(37, 99, 235, 0.2);">
-                    <p><b>Gefundener Artikel:</b> <span id="outProduct"></span></p>
-                    <p><b>Aktueller Bestand:</b> <span id="outCurrentQty"></span> Stk. (<span id="outLocation"></span>)</p>
-                </div>
-                <div class="input-group">
-                    <label>Entnommene Menge</label>
-                    <input type="number" id="outQty" value="1" min="1">
-                </div>
-                <div class="input-group">
-                    <label>Auftragsnummer / Notiz (Optional)</label>
-                    <input type="text" id="outNote" placeholder="z.B. Bestellung #4921">
-                </div>
-                <button class="btn btn-primary" id="btnSubmitOutbound" style="width: 100%;"><i class="fas fa-upload"></i> Warenausgang buchen</button>
-            </div>
-        </section>
-
-        <section id="inventoryPage" class="page-section hidden">
-            <div class="page-header"><h2>Warenbestand</h2></div>
-            <div class="card">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInventory" placeholder="Suche nach Barcode oder Artikel...">
-                </div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Barcode</th><th>Kategorie</th><th>Bestand</th><th>Lagerplatz</th><th class="admin-only">Aktionen</th></tr></thead>
-                        <tbody id="inventoryBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="historyPage" class="page-section hidden">
-            <div class="page-header">
-                <h2>Buchungshistorie</h2>
-                <button class="btn btn-outline" id="exportCsvBtn"><i class="fas fa-file-csv"></i> CSV Export</button>
-            </div>
-            <div class="card">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchHistory" placeholder="Suche nach Barcode, Lieferant, ID...">
-                </div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Typ</th><th>Datum/Zeit</th><th>Mitarbeiter</th><th>Artikel & Barcode</th><th>Menge</th><th>Ref / Notiz</th><th class="admin-only">Aktionen</th></tr></thead>
-                        <tbody id="historyBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="auditPage" class="page-section hidden admin-only">
-            <div class="page-header"><h2>Revisions- & Audit-Log</h2></div>
-            <div class="card">
-                <p style="margin-bottom: 20px; color: var(--text-muted); font-size: 0.9em;"><i class="fas fa-info-circle"></i> Dieses Log ist unveränderlich und dokumentiert alle sicherheitskritischen Aktionen und manuellen Bestandsänderungen.</p>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Zeitstempel</th><th>Benutzer</th><th>Aktion</th><th>Details</th></tr></thead>
-                        <tbody id="auditBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="masterDataPage" class="page-section hidden admin-only">
-            <div class="page-header"><h2>System & Stammdaten</h2></div>
-            
-            <div class="card" style="border-color: var(--accent);">
-                <h3><i class="fas fa-hdd"></i> Datensicherung (Backup & Restore)</h3>
-                <p style="margin: 10px 0; font-size: 0.9em; color: var(--text-muted);">Sichern Sie das gesamte System als lokale Datei.</p>
-                <div style="display: flex; gap: 15px;">
-                    <button class="btn btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Exportieren</button>
-                    <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(event)">
-                    <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Importieren</button>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="card">
-                    <h3>IT-Lieferanten</h3>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="newSupplier" placeholder="Neuer Lieferant">
-                        <button class="btn btn-primary" onclick="addMaster('supplier')"><i class="fas fa-plus"></i></button>
+            <section id="inventoryPage" class="page-section hidden">
+                <div class="page-header">
+                    <h2>Warenbestand</h2>
+                    <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+                        <label style="font-size:0.85rem; font-weight:600; cursor:pointer; color:var(--text-muted); display:flex; align-items:center; gap:6px;">
+                            <input type="checkbox" id="showZeroStock" style="width:auto; cursor:pointer;">
+                            Archiv (Bestand = 0)
+                        </label>
+                        <button class="btn btn-outline btn-sm action-col" onclick="openScanner('searchInventory')"><i class="fas fa-camera"></i> Barcode scannen</button>
                     </div>
-                    <ul id="supplierList" style="margin-top: 20px; list-style: none; line-height: 2.5;"></ul>
                 </div>
                 <div class="card">
-                    <h3>Artikel-Kategorien</h3>
-                    <div style="display: flex; gap: 10px; margin-top: 15px;">
-                        <input type="text" id="newProduct" placeholder="Neue Kategorie">
-                        <button class="btn btn-primary" onclick="addMaster('product')"><i class="fas fa-plus"></i></button>
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInventory" placeholder="Suche nach Barcode oder Artikel...">
                     </div>
-                    <ul id="productList" style="margin-top: 20px; list-style: none; line-height: 2.5;"></ul>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Barcode</th><th>Kategorie</th><th>Bestand</th><th>Min.</th><th>Lagerplatz</th><th>Drucken</th><th class="action-col">Aktion</th></tr></thead>
+                            <tbody id="inventoryBody"></tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="settingsPage" class="page-section hidden">
-            <div class="page-header"><h2>Persönliche & System-Einstellungen</h2></div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <section id="historyPage" class="page-section hidden">
+                <div class="page-header">
+                    <h2>Buchungshistorie</h2>
+                    <button class="btn btn-outline btn-sm" id="exportCsvBtn"><i class="fas fa-file-csv"></i> CSV Export</button>
+                </div>
                 <div class="card">
-                    <h3><i class="fas fa-paint-brush"></i> Design & Ansicht</h3>
-                    <div class="input-group" style="margin-top: 15px;">
-                        <label>Erscheinungsbild</label>
-                        <select id="setTheme"><option value="light">Hell (Standard)</option><option value="dark">Dunkelmodus (Dark Mode)</option></select>
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchHistory" placeholder="Suche nach Barcode, Lieferant, ID...">
                     </div>
-                    <div class="input-group">
-                        <label>Schriftgröße</label>
-                        <select id="setFontSize"><option value="small">Klein (Tablet)</option><option value="medium">Normal (Standard)</option><option value="large">Groß (Desktop)</option></select>
-                    </div>
-                    <div class="input-group">
-                        <label>Firmenfarbe (Hauptfarbe)</label>
-                        <input type="color" id="setColor" style="height: 50px; padding: 5px; cursor: pointer;">
-                    </div>
-                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="setCompact" style="width: auto;">
-                        <label style="margin: 0;">Kompakt-Modus (Kleinere Abstände)</label>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Typ</th><th>Datum/Zeit</th><th>Mitarbeiter</th><th>Artikel & Barcode</th><th>Menge</th><th>Ref / Notiz</th><th class="action-col">Aktion</th></tr></thead>
+                            <tbody id="historyBody"></tbody>
+                        </table>
                     </div>
                 </div>
+            </section>
 
+            <section id="auditPage" class="page-section hidden admin-up">
+                <div class="page-header"><h2>Audit-Log</h2></div>
                 <div class="card">
-                    <h3><i class="fas fa-cogs"></i> Workflow & Scanner</h3>
-                    <div class="input-group" style="margin-top: 15px;">
-                        <label>Aktion nach erfolgreichem Eingang</label>
-                        <select id="setWorkflow"><option value="dash">Zum Dashboard wechseln</option><option value="stay">Im Formular bleiben (Für neuen Scan)</option></select>
-                    </div>
-                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="setSounds" style="width: auto;">
-                        <label style="margin: 0;">Akustisches Feedback (Scanner-Beep / Warnungen)</label>
-                    </div>
-                    <div class="input-group">
-                        <label>Datumsformat</label>
-                        <select id="setDateFormat"><option value="DE">Deutsch (TT.MM.JJJJ)</option><option value="INT">International (JJJJ-MM-TT)</option></select>
+                    <p style="margin-bottom:16px;color:var(--text-muted);font-size:0.85rem;"><i class="fas fa-info-circle"></i> Unveränderliches Protokoll aller sicherheitskritischen Aktionen.</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Zeitstempel</th><th>Benutzer</th><th>Aktion</th><th>Details</th></tr></thead>
+                            <tbody id="auditBody"></tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="card admin-only" style="border: 2px solid var(--danger); background: rgba(239, 68, 68, 0.05);">
-                <h3 style="color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Gefahrenzone (Nur Admins)</h3>
-                <p style="margin: 10px 0; font-size: 0.9em;">System auf Werkszustand zurücksetzen. Alle Daten werden unwiderruflich gelöscht. Ein Audit-Log Eintrag wird erstellt, bevor das System terminiert wird.</p>
-                <button class="btn btn-danger" onclick="factoryReset()"><i class="fas fa-trash-alt"></i> System auf Werkseinstellungen zurücksetzen</button>
-            </div>
-        </section>
-
-        <section id="faqPage" class="page-section hidden">
-            <div class="page-header"><h2>Hilfe & System-Info</h2></div>
-            <div class="card">
-                <h3 style="margin-bottom: 10px; color: var(--accent);"><i class="fas fa-upload"></i> Warenausgang</h3>
-                <p style="margin-bottom: 20px;">Scannen Sie im Tab Warenausgang den Barcode. Das System zeigt an, wie viel Bestand da ist. Buchen Sie die Menge ab.</p>
+            <section id="masterDataPage" class="page-section hidden manager-up">
+                <div class="page-header"><h2>Stammdaten</h2></div>
+                <div class="card admin-up" style="border-color:var(--accent);">
+                    <h3 style="margin-bottom:8px;"><i class="fas fa-hdd"></i> Datensicherung</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">Komplettes System als JSON exportieren oder wiederherstellen.</p>
+                    <div style="display:flex;gap:12px; flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="exportBackup()"><i class="fas fa-download"></i> Exportieren</button>
+                        <input type="file" id="importFile" accept=".json" class="hidden" onchange="importBackup(event)">
+                        <button class="btn btn-outline" onclick="document.getElementById('importFile').click()"><i class="fas fa-upload"></i> Importieren</button>
+                    </div>
+                </div>
                 
-                <h3 style="margin-bottom: 10px; color: var(--accent);"><i class="fas fa-tags"></i> Etikettendruck</h3>
-                <p style="margin-bottom: 20px;">Nach dem Wareneingang können Sie wählen, ob Sie einen großen A4-Beleg oder ein kleines Etikett mit QR-Code drucken wollen.</p>
-
-                <h3 style="margin-bottom: 10px; color: var(--accent);"><i class="fas fa-shield-alt"></i> Audit-Log (Für Admins)</h3>
-                <p>Wenn Sie im Bestand die Mengen manuell mit dem Stift korrigieren, wird das im Audit-Log automatisch dokumentiert.</p>
-            </div>
-        </section>
-
-        <section id="userPage" class="page-section hidden admin-only">
-            <div class="page-header"><h2>Benutzerverwaltung</h2></div>
-            <div class="card">
-                <div style="display: flex; gap: 15px; align-items: flex-end;">
-                    <div class="input-group" style="margin:0; flex:1;"><label>Benutzername</label><input type="text" id="newUserEmail"></div>
-                    <div class="input-group" style="margin:0; flex:1;"><label>Passwort</label><input type="text" id="newUserPassword"></div>
-                    <div class="input-group" style="margin:0; flex:1;"><label>Rolle</label><select id="newUserRole"><option value="employee">Mitarbeiter</option><option value="admin">Admin</option></select></div>
-                    <button class="btn btn-primary" id="saveUserBtn">Anlegen</button>
+                <div class="card">
+                    <h3 style="margin-bottom:14px;">IT-Lieferanten (Erweitert)</h3>
+                    <div class="grid-input-3" style="margin-bottom:10px;">
+                        <input type="text" id="nsName" placeholder="Firmenname *">
+                        <input type="text" id="nsContact" placeholder="Ansprechpartner (ASP)">
+                        <input type="email" id="nsEmail" placeholder="Support E-Mail">
+                        <input type="tel" id="nsPhone" placeholder="Telefonnummer">
+                        <input type="text" id="nsUrl" placeholder="Bestell-URL (Webshop)">
+                        <button class="btn btn-primary" onclick="addSupplier()"><i class="fas fa-plus"></i> Lieferant anlegen</button>
+                    </div>
+                    <ul id="supplierList" style="margin-top:16px;list-style:none;"></ul>
                 </div>
-            </div>
-            <div class="card">
-                <table>
-                    <thead><tr><th>Benutzername</th><th>Rolle</th><th>Aktion</th></tr></thead>
-                    <tbody id="userTableBody"></tbody>
-                </table>
-            </div>
-        </section>
+                
+                <div class="card">
+                    <h3 style="margin-bottom:14px;">Artikel-Kategorien</h3>
+                    <div style="display:flex;gap:8px;max-width:400px;">
+                        <input type="text" id="newProduct" placeholder="Neue Kategorie">
+                        <button class="btn btn-primary" onclick="addCategory()"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <ul id="productList" style="margin-top:16px;list-style:none;"></ul>
+                </div>
+            </section>
 
-    </main>
+            <section id="settingsPage" class="page-section hidden manager-up">
+                <div class="page-header"><h2>Einstellungen</h2></div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3 style="margin-bottom:16px;"><i class="fas fa-paint-brush"></i> Design & UI</h3>
+                        <div class="input-group"><label>Erscheinungsbild</label><select id="setTheme"><option value="light">Hell</option><option value="dark">Dunkel</option></select></div>
+                        <div class="input-group"><label>Schriftgröße</label><select id="setFontSize"><option value="small">Klein</option><option value="medium">Normal</option><option value="large">Groß</option></select></div>
+                        <div class="input-group"><label>Akzentfarbe</label><input type="color" id="setColor" style="height:44px;padding:4px;cursor:pointer;"></div>
+                        <div class="input-group">
+                            <label>Eigenes Firmenlogo (Überschreibt Icons)</label>
+                            <input type="file" id="setLogo" accept="image/*" style="padding:6px;">
+                            <button class="btn btn-sm btn-outline" onclick="clearLogo()" style="margin-top:6px;width:140px;"><i class="fas fa-trash"></i> Logo entfernen</button>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+                            <input type="checkbox" id="setCompact" style="width:auto;">
+                            <label style="font-size:0.875rem;">Kompakt-Modus</label>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin-bottom:16px;"><i class="fas fa-cogs"></i> Workflow</h3>
+                        <div class="input-group"><label>Nach Eingang</label><select id="setWorkflow"><option value="dash">Zum Dashboard</option><option value="stay">Im Formular bleiben</option></select></div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+                            <input type="checkbox" id="setSounds" style="width:auto;">
+                            <label style="font-size:0.875rem;">Akustisches Feedback</label>
+                        </div>
+                        <div class="input-group" style="margin-top:14px;"><label>Datumsformat</label><select id="setDateFormat"><option value="DE">Deutsch (TT.MM.JJJJ)</option><option value="INT">International (JJJJ-MM-TT)</option></select></div>
+                    </div>
+                </div>
+                <div class="card admin-up" style="border:2px solid var(--danger);background:rgba(220,38,38,.04);">
+                    <h3 style="color:var(--danger);margin-bottom:8px;"><i class="fas fa-exclamation-triangle"></i> Gefahrenzone</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">System zurücksetzen — alle Daten werden unwiderruflich gelöscht.</p>
+                    <button class="btn btn-danger" onclick="factoryReset()"><i class="fas fa-trash-alt"></i> Auf Werkseinstellungen zurücksetzen</button>
+                </div>
+            </section>
+
+            <section id="faqPage" class="page-section hidden">
+                <div class="page-header"><h2>Hilfe & FAQ</h2></div>
+                <div class="card">
+                    <h3 style="color:var(--accent);margin-bottom:8px;"><i class="fas fa-camera"></i> Kamera-Scanner</h3>
+                    <p style="margin-bottom:18px;font-size:0.875rem;">Klicken Sie auf den <b>„Scannen"</b>-Button neben einem Barcode-Feld. Erlauben Sie den Kamera-Zugriff. Das System erkennt QR-Codes und Barcodes automatisch und überträgt den Wert ins Feld.</p>
+                    <h3 style="color:var(--accent);margin-bottom:8px;"><i class="fas fa-tag"></i> Etikett & A4-Druck pro Artikel</h3>
+                    <p style="margin-bottom:18px;font-size:0.875rem;">Im Warenbestand gibt es pro Zeile die Option, ein kleines Etikett oder den dazugehörigen A4-Warenbegleitschein erneut auszudrucken. Bei A4 zieht sich das System automatisch die Daten des letzten zugehörigen Wareneingangs.</p>
+                    <h3 style="color:var(--accent);margin-bottom:8px;"><i class="fas fa-upload"></i> Warenausgang & Archiv</h3>
+                    <p style="margin-bottom:18px;font-size:0.875rem;">Fällt ein Bestand nach der Entnahme auf 0, wird der Artikel nicht gelöscht, sondern ins Archiv verschoben. Im Warenbestand kannst du dir leere Bestände über die Checkbox anzeigen lassen und über "Bearbeiten" den Bestand bei Bedarf wieder anheben.</p>
+                    <h3 style="color:var(--accent);margin-bottom:8px;"><i class="fas fa-layer-group"></i> Lagerplätze & Mindestbestand</h3>
+                    <p style="font-size:0.875rem;">Wähle beim Eingang exakte Lagerplätze. Admins können im Warenbestand zudem einen Mindestbestand pro Artikel definieren. Wird dieser unterschritten, färbt sich die Zeile rot und das Dashboard warnt.</p>
+                </div>
+            </section>
+
+            <section id="userPage" class="page-section hidden admin-up">
+                <div class="page-header"><h2>Benutzerverwaltung</h2></div>
+                <div class="card">
+                    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+                        <div class="input-group" style="margin:0;flex:1;min-width:140px;"><label>Benutzername</label><input type="text" id="newUserEmail"></div>
+                        <div class="input-group" style="margin:0;flex:1;min-width:140px;"><label>Passwort</label><input type="text" id="newUserPassword"></div>
+                        <div class="input-group" style="margin:0;"><label>Rolle</label>
+                            <select id="newUserRole">
+                                <option value="superadmin">Superadmin</option>
+                                <option value="admin">Admin</option>
+                                <option value="manager">Schichtleiter (Manager)</option>
+                                <option value="employee" selected>Mitarbeiter</option>
+                                <option value="praktikant">Praktikant (Nur Lesen)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="saveUserBtn"><i class="fas fa-plus"></i> Anlegen</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Benutzername</th><th>Rolle</th><th>Aktion</th></tr></thead>
+                            <tbody id="userTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <button id="aiChatToggle" style="position:fixed; bottom:24px; right:24px; width:56px; height:56px; border-radius:50%; background:var(--accent); color:#fff; border:none; box-shadow:0 10px 25px rgba(0,0,0,0.2); font-size:1.5rem; cursor:pointer; z-index:2000; transition:transform 0.2s;"><i class="fas fa-sparkles"></i></button>
+
+    <div id="aiChatWindow" class="hidden" style="position:fixed; bottom:90px; right:24px; width:360px; max-width:calc(100vw - 48px); background:var(--card-bg); border-radius:16px; box-shadow:0 15px 35px rgba(0,0,0,0.3); border:1px solid var(--border); z-index:2000; display:flex; flex-direction:column; overflow:hidden; transition:all 0.3s;">
+        <div style="background:var(--accent); color:#fff; padding:16px; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
+            <span><i class="fas fa-robot"></i> LogiTrack KI-Assistent</span>
+            <button id="aiChatClose" style="background:transparent; border:none; color:#fff; cursor:pointer; font-size:1.2rem;"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="aiChatHistory" style="height:320px; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; font-size:0.875rem; background:var(--bg);">
+            
+            <div style="align-self:flex-start; background:var(--card-bg); color:var(--text-main); padding:12px 16px; border-radius:12px 12px 12px 0; border:1px solid var(--border); box-shadow: var(--shadow);">
+                <b>👋 Hallo! Ich bin der LogiTrack KI-Assistent.</b><br><br>
+                Du kannst mich alles über unser Lager fragen. Klicke einfach auf eine dieser Fragen, um sie direkt zu stellen:<br><br>
+                
+                <span style="color:var(--accent); cursor:pointer; font-weight:500; display:block; padding:4px 0;" onclick="document.getElementById('aiChatInput').value='Zeig mir den Gesamtbestand'; document.getElementById('aiChatSend').click();">👉 Zeig mir den Gesamtbestand</span>
+                
+                <span style="color:var(--accent); cursor:pointer; font-weight:500; display:block; padding:4px 0;" onclick="document.getElementById('aiChatInput').value='Gibt es kritische Bestände?'; document.getElementById('aiChatSend').click();">👉 Gibt es kritische Bestände?</span>
+                
+                <span style="color:var(--accent); cursor:pointer; font-weight:500; display:block; padding:4px 0;" onclick="document.getElementById('aiChatInput').value='Welche Artikel liegen im Sperrlager?'; document.getElementById('aiChatSend').click();">👉 Welche Artikel liegen im Sperrlager?</span>
+                
+                <span style="color:var(--accent); cursor:pointer; font-weight:500; display:block; padding:4px 0;" onclick="document.getElementById('aiChatInput').value='Zeig mir alle Lieferanten'; document.getElementById('aiChatSend').click();">👉 Zeig mir alle Lieferanten</span>
+                
+                <span style="color:var(--accent); cursor:pointer; font-weight:500; display:block; padding:4px 0;" onclick="document.getElementById('aiChatInput').value='Was waren die letzten Buchungen?'; document.getElementById('aiChatSend').click();">👉 Was waren die letzten Buchungen?</span>
+                
+                <br>Oder tippe unten den Namen eines speziellen <b>Lieferanten</b> oder <b>Artikels</b> ein!
+            </div>
+            
+        </div>
+        <div style="padding:12px; background:var(--card-bg); border-top:1px solid var(--border); display:flex; gap:8px;">
+            <input type="text" id="aiChatInput" placeholder="Frag mich etwas zum Lager..." style="flex:1; padding:10px 14px; border-radius:20px; border:1px solid var(--border); font-size:0.875rem; background:var(--bg); color:var(--text-main);">
+            <button id="aiChatSend" style="background:var(--accent); color:#fff; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; display:flex; justify-content:center; align-items:center;"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
 </div>
 
-<script>
-/**
- * LOGITRACK ENTERPRISE - ULTIMATE V8 (Outbound, Audit, Label Print)
- * Code by Gemini
- */
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js" defer></script>
 
-// --- STATE & LOCAL STORAGE ---
+<script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ─── FIREBASE SETUP ──────────────────────────────────────────────────────────
+const firebaseConfig = {
+    apiKey: "AIzaSyAioBbKtkZPdkc-uvLYmAMgoPc-XgKLdMI",
+    authDomain: "logitrack-59592.firebaseapp.com",
+    projectId: "logitrack-59592",
+    storageBucket: "logitrack-59592.firebasestorage.app",
+    messagingSenderId: "667415141949",
+    appId: "1:667415141949:web:4e8339d1f35190dcae9454"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ─── SAFE STORAGE ────────────────────────────────────────────────────────────
+function safeLoad(key, fallback) {
+    try { const item = localStorage.getItem(key); return item ? JSON.parse(item) : fallback; }
+    catch (e) { return fallback; }
+}
+
+const defaultSuppliers = [
+    { id: 1, name: "Bechtle", contact: "Key Account", email: "it-support@bechtle.com", phone: "+49 7132 981-0", orderUrl: "https://www.bechtle.com/shop" },
+    { id: 2, name: "Adobe", contact: "Account Management", email: "german-custserv@adobe.com", phone: "0800 7522581", orderUrl: "https://www.adobe.com/de/creativecloud/business.html" },
+    { id: 3, name: "Dell", contact: "Enterprise Support", email: "business_support@dell.com", phone: "+49 69 9792 0", orderUrl: "https://www.dell.com/de-de/lp/dt/premier" },
+    { id: 4, name: "Cisco Systems", contact: "Partner Support", email: "tac@cisco.com", phone: "+49 800 187 3652", orderUrl: "https://www.cisco.com/go/ordering" },
+    { id: 5, name: "Microsoft", contact: "Volume Licensing", email: "support@microsoft.com", phone: "+49 800 664 5323", orderUrl: "https://admin.microsoft.com" },
+    { id: 6, name: "Cancom", contact: "Vertriebsteam", email: "support@cancom.de", phone: "+49 89 54054-0", orderUrl: "https://shop.cancom.de" },
+    { id: 7, name: "Lenovo", contact: "Pro Support", email: "questions_de@lenovo.com", phone: "+49 711 65690807", orderUrl: "https://www.lenovo.com/de/de/business/" }
+];
+
+// ─── LOKALER STATE MIT BEISPIEL-DATEN AB FEBRUAR 2026 ────────────────────────
 let state = {
     currentUser: null,
-    users: JSON.parse(localStorage.getItem("wms8_users")) || [{ email: "admin", password: "123", role: "admin" }, { email: "lager", password: "123", role: "employee" }],
-    records: JSON.parse(localStorage.getItem("wms8_records")) || [],
-    inventory: JSON.parse(localStorage.getItem("wms8_inventory")) || [],
-    audit: JSON.parse(localStorage.getItem("wms8_audit")) || [],
-    masterSuppliers: JSON.parse(localStorage.getItem("wms8_ms")) || ["Bechtle", "Dell Technologies", "Lenovo", "Cyberport"],
-    masterProducts: JSON.parse(localStorage.getItem("wms8_mp")) || ["Notebooks", "Monitore", "Server", "Switches", "Peripherie"],
-    settings: JSON.parse(localStorage.getItem("wms8_settings")) || { theme: 'light', fontSize: 'medium', color: '#2563eb', compact: false, workflow: 'dash', sounds: true, dateFormat: 'DE' }
+    users: [{ email:"admin", password:"123", role:"superadmin" },{ email:"lager", password:"123", role:"employee" }],
+    
+    // Vorgefüllte Historie
+    records: [
+        { type:'OUT', id:1713600000000, date:'2026-04-20', time:'14:30', supplier:'Warenausgang', note:'Ticket #9012', product:'Peripherie', barcode:'BC-PER-5005', qtyIst:48, status:'Ausgebucht', user:'lager' },
+        { type:'IN', id:1711958400000, date:'2026-04-01', time:'09:15', supplier:'Dell', note:'LS-26-0401', product:'Server', barcode:'BC-SRV-4004', qtyIst:3, status:'Einlagern', location:'C-01', user:'admin' },
+        { type:'OUT', id:1710067200000, date:'2026-03-10', time:'11:00', supplier:'Warenausgang', note:'Ausstattung IT', product:'Notebooks', barcode:'BC-DELL-1001', qtyIst:5, status:'Ausgebucht', user:'admin' },
+        { type:'IN', id:1709635200000, date:'2026-03-05', time:'13:45', supplier:'Bechtle', note:'LS-26-0305', product:'Switches', barcode:'BC-BEC-3003', qtyIst:2, status:'Quarantäne', location:'Sperrlager', user:'lager', qaDetails:{type:'Transportschaden (Kartonage defekt)', notes:'Karton eingedrückt, Gehäuse verzogen.', photo:''} },
+        { type:'IN', id:1709116800000, date:'2026-02-28', time:'08:30', supplier:'Lenovo', note:'LS-26-0228', product:'Monitore', barcode:'BC-LEN-2002', qtyIst:20, status:'Einlagern', location:'B-05', user:'lager' },
+        { type:'IN', id:1707993600000, date:'2026-02-15', time:'10:20', supplier:'Dell', note:'LS-26-0215', product:'Notebooks', barcode:'BC-DELL-1001', qtyIst:15, status:'Einlagern', location:'A-02', user:'admin' },
+        { type:'IN', id:1707561600000, date:'2026-02-10', time:'15:00', supplier:'Bechtle', note:'LS-26-0210', product:'Peripherie', barcode:'BC-PER-5005', qtyIst:50, status:'Einlagern', location:'C-10', user:'lager' }
+    ],
+
+    // Vorgefüllter Warenbestand (passend zur Historie)
+    inventory: [
+        { barcode:'BC-DELL-1001', product:'Notebooks', qty:10, location:'A-02', minStock:5, supplier:'Dell' },
+        { barcode:'BC-LEN-2002', product:'Monitore', qty:20, location:'B-05', minStock:10, supplier:'Lenovo' },
+        { barcode:'BC-BEC-3003', product:'Switches', qty:2, location:'Sperrlager', minStock:1, supplier:'Bechtle' },
+        { barcode:'BC-SRV-4004', product:'Server', qty:3, location:'C-01', minStock:2, supplier:'Dell' },
+        { barcode:'BC-PER-5005', product:'Peripherie', qty:2, location:'C-10', minStock:10, supplier:'Bechtle' }
+    ],
+
+    // Vorgefülltes Audit-Log
+    audit: [
+        { date:'20.04.2026', time:'14:30:12', user:'lager', action:'WARENAUSGANG', details:'48x Peripherie (BC: BC-PER-5005) ausgebucht. Neuer Bestand: 2' },
+        { date:'01.04.2026', time:'09:16:05', user:'admin', action:'WARENEINGANG', details:'3x Server (BC: BC-SRV-4004) eingebucht in C-01.' },
+        { date:'10.03.2026', time:'11:01:22', user:'admin', action:'WARENAUSGANG', details:'5x Notebooks (BC: BC-DELL-1001) ausgebucht. Neuer Bestand: 10' },
+        { date:'05.03.2026', time:'13:46:30', user:'lager', action:'WARENEINGANG', details:'2x Switches (BC: BC-BEC-3003) eingebucht in Sperrlager.' },
+        { date:'15.02.2026', time:'10:21:40', user:'admin', action:'WARENEINGANG', details:'15x Notebooks (BC: BC-DELL-1001) eingebucht in A-02.' }
+    ],
+
+    masterSuppliers: defaultSuppliers, 
+    masterProducts: ["Notebooks","Monitore","Server","Switches","Peripherie"],
+    activeSessions: {}, 
+    settings: safeLoad("lt9_settings", { theme:'light', fontSize:'medium', color:'#2563eb', compact:false, workflow:'dash', sounds:true, dateFormat:'DE', logo:'' })
 };
 
-const saveData = () => {
-    localStorage.setItem("wms8_users", JSON.stringify(state.users));
-    localStorage.setItem("wms8_records", JSON.stringify(state.records));
-    localStorage.setItem("wms8_inventory", JSON.stringify(state.inventory));
-    localStorage.setItem("wms8_audit", JSON.stringify(state.audit));
-    localStorage.setItem("wms8_ms", JSON.stringify(state.masterSuppliers));
-    localStorage.setItem("wms8_mp", JSON.stringify(state.masterProducts));
-    localStorage.setItem("wms8_settings", JSON.stringify(state.settings));
+// ─── CLOUD ECHTZEIT-SYNCHRONISATION ──────────────────────────────────────────
+db.collection("logitrack").doc("globalState").onSnapshot((doc) => {
+    if (doc.exists) {
+        const data = doc.data();
+        state.users = data.users || state.users;
+        state.records = data.records || [];
+        state.inventory = data.inventory || [];
+        state.audit = data.audit || [];
+        state.masterProducts = data.masterProducts || state.masterProducts;
+        state.activeSessions = data.activeSessions || {}; 
+        
+        state.masterSuppliers = data.masterSuppliers && data.masterSuppliers.length > 0 ? data.masterSuppliers : defaultSuppliers;
+        state.masterSuppliers = state.masterSuppliers.map((s, idx) => {
+            if(typeof s === 'string') return { id:Date.now()+idx, name:s, email:'', contact:'', phone:'', orderUrl:'' };
+            return s;
+        });
+
+        if(data.settings && data.settings.logo) state.settings.logo = data.settings.logo;
+
+    } else {
+        save();
+    }
+    
+    if(state.currentUser) {
+        renderAll();
+        initMasterData();
+    }
+});
+
+// ─── ZENTRALE SPEICHER-FUNKTION ──────────────────────────────────────────────
+const save = () => {
+    db.collection("logitrack").doc("globalState").set({
+        users: state.users,
+        records: state.records,
+        inventory: state.inventory,
+        audit: state.audit,
+        masterSuppliers: state.masterSuppliers,
+        masterProducts: state.masterProducts,
+        activeSessions: state.activeSessions,
+        settings: state.settings 
+    }).catch(err => console.error("Cloud-Speicher Fehler:", err));
+    
+    localStorage.setItem("lt9_settings", JSON.stringify(state.settings));
 };
 
-// --- AUDIT LOG ENGINE ---
+// ─── ONLINE-STATUS HEARTBEAT ─────────────────────────────────────────────────
+function pingPresence() {
+    if(state.currentUser) {
+        state.activeSessions[state.currentUser.email] = Date.now();
+        save();
+    }
+}
+
+// ─── UI UND HILFSFUNKTIONEN ──────────────────────────────────────────────────
+const slotSelect = document.getElementById('w-slot');
+for(let i = 1; i <= 10; i++) {
+    let opt = document.createElement('option');
+    opt.value = i < 10 ? '0' + i : i.toString();
+    opt.textContent = 'Fach ' + opt.value;
+    slotSelect.appendChild(opt);
+}
+
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+
+function toggleMobileMenu() {
+    sidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('open');
+}
+mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+sidebarOverlay.addEventListener('click', toggleMobileMenu);
+
 function logAudit(action, details) {
     if(!state.currentUser) return;
     const now = new Date();
-    state.audit.unshift({
-        date: now.toLocaleDateString('de-DE'),
-        time: now.toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit', second:'2-digit'}),
-        user: state.currentUser.email,
-        action: action,
-        details: details
-    });
-    saveData();
+    state.audit.unshift({ date: now.toLocaleDateString('de-DE'), time: now.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit',second:'2-digit'}), user: state.currentUser.email, action, details });
+    save();
     renderAudit();
 }
-
 function renderAudit() {
-    document.getElementById("auditBody").innerHTML = state.audit.map(a => `<tr><td style="font-size:0.85em; color:var(--text-muted);">${a.date} ${a.time}</td><td><b>${a.user}</b></td><td><span class="badge badge-info">${a.action}</span></td><td>${a.details}</td></tr>`).join("");
+    document.getElementById("auditBody").innerHTML = state.audit.map(a =>
+        `<tr><td style="font-size:0.8rem;color:var(--text-muted);font-family:'DM Mono',monospace;">${a.date} ${a.time}</td><td><b>${a.user}</b></td><td><span class="badge badge-info">${a.action}</span></td><td style="font-size:0.85rem;">${a.details}</td></tr>`
+    ).join("");
 }
 
-// --- SETTINGS ENGINE ---
 function applySettings() {
-    document.body.classList.toggle('dark-mode', state.settings.theme === 'dark');
+    document.body.classList.toggle('dark-mode', state.settings.theme==='dark');
     document.body.classList.toggle('compact-ui', state.settings.compact);
-    document.body.classList.remove('font-small', 'font-large');
-    if(state.settings.fontSize === 'small') document.body.classList.add('font-small');
-    if(state.settings.fontSize === 'large') document.body.classList.add('font-large');
+    document.body.classList.remove('font-small','font-large');
+    if(state.settings.fontSize==='small') document.body.classList.add('font-small');
+    if(state.settings.fontSize==='large') document.body.classList.add('font-large');
     document.documentElement.style.setProperty('--accent', state.settings.color);
-    
-    document.getElementById("setTheme").value = state.settings.theme;
-    document.getElementById("setFontSize").value = state.settings.fontSize;
-    document.getElementById("setColor").value = state.settings.color;
-    document.getElementById("setCompact").checked = state.settings.compact;
-    document.getElementById("setWorkflow").value = state.settings.workflow;
-    document.getElementById("setSounds").checked = state.settings.sounds;
+    document.getElementById("setTheme").value      = state.settings.theme;
+    document.getElementById("setFontSize").value   = state.settings.fontSize;
+    document.getElementById("setColor").value      = state.settings.color;
+    document.getElementById("setCompact").checked  = state.settings.compact;
+    document.getElementById("setWorkflow").value   = state.settings.workflow;
+    document.getElementById("setSounds").checked   = state.settings.sounds;
     document.getElementById("setDateFormat").value = state.settings.dateFormat;
+
+    const lg1 = document.getElementById('mainLoginLogo');
+    const lg2 = document.getElementById('sidebarBrandDiv');
+    if(state.settings.logo) {
+        lg1.innerHTML = `<img src="${state.settings.logo}">`;
+        lg2.innerHTML = `<img src="${state.settings.logo}"> Logi<span>Track</span>`;
+    } else {
+        lg1.innerHTML = `<i class="fas fa-boxes-stacked" style="color:#fff;font-size:1.6rem;"></i>`;
+        lg2.innerHTML = `<i class="fas fa-boxes-stacked" style="color:var(--accent);"></i> Logi<span>Track</span>`;
+    }
 }
 
-document.getElementById("setTheme").addEventListener("change", (e) => { state.settings.theme = e.target.value; saveData(); applySettings(); });
-document.getElementById("setFontSize").addEventListener("change", (e) => { state.settings.fontSize = e.target.value; saveData(); applySettings(); });
-document.getElementById("setColor").addEventListener("input", (e) => { state.settings.color = e.target.value; saveData(); applySettings(); });
-document.getElementById("setCompact").addEventListener("change", (e) => { state.settings.compact = e.target.checked; saveData(); applySettings(); });
-document.getElementById("setWorkflow").addEventListener("change", (e) => { state.settings.workflow = e.target.value; saveData(); applySettings(); });
-document.getElementById("setSounds").addEventListener("change", (e) => { state.settings.sounds = e.target.checked; saveData(); applySettings(); playSound('success'); });
-document.getElementById("setDateFormat").addEventListener("change", (e) => { state.settings.dateFormat = e.target.value; saveData(); applySettings(); renderAll(); });
+document.getElementById("setTheme").addEventListener("change",      e=>{ state.settings.theme=e.target.value;      save(); applySettings(); });
+document.getElementById("setFontSize").addEventListener("change",  e=>{ state.settings.fontSize=e.target.value;   save(); applySettings(); });
+document.getElementById("setColor").addEventListener("input",      e=>{ state.settings.color=e.target.value;      save(); applySettings(); });
+document.getElementById("setCompact").addEventListener("change",   e=>{ state.settings.compact=e.target.checked;  save(); applySettings(); });
+document.getElementById("setWorkflow").addEventListener("change",  e=>{ state.settings.workflow=e.target.value;   save(); });
+document.getElementById("setSounds").addEventListener("change",    e=>{ state.settings.sounds=e.target.checked;   save(); playSound('success'); });
+document.getElementById("setDateFormat").addEventListener("change",e=>{ state.settings.dateFormat=e.target.value; save(); renderAll(); });
+
+document.getElementById("setLogo").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const maxW = 250; 
+            const scale = Math.min(maxW / img.width, 1); 
+            canvas.width = img.width * scale; 
+            canvas.height = img.height * scale;
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            state.settings.logo = canvas.toDataURL('image/png');
+            save(); 
+            applySettings(); 
+            alert("Logo erfolgreich hochgeladen und gespeichert!"); 
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+window.clearLogo = () => { state.settings.logo = ''; document.getElementById("setLogo").value=""; save(); applySettings(); };
 
 window.factoryReset = () => {
-    if(prompt("ACHTUNG! Geben Sie 'RESET' ein, um ALLE Daten unwiderruflich zu löschen:") === "RESET") {
-        logAudit("FACTORY RESET", "System wurde komplett zurückgesetzt.");
-        setTimeout(() => { localStorage.clear(); location.reload(); }, 500);
+    if(prompt("ACHTUNG! Geben Sie 'RESET' ein, um ALLE Daten aus der Cloud zu löschen:") === "RESET") {
+        const defaultState = {
+            users: [{ email:"admin", password:"123", role:"superadmin" },{ email:"lager", password:"123", role:"employee" }],
+            records: [],
+            inventory: [],
+            audit: [],
+            masterProducts: ["Notebooks","Monitore","Server","Switches","Peripherie"],
+            activeSessions: {},
+            masterSuppliers: defaultSuppliers,
+            settings: { theme:'light', fontSize:'medium', color:'#2563eb', compact:false, workflow:'dash', sounds:true, dateFormat:'DE', logo:'' }
+        };
+        
+        localStorage.clear();
+        db.collection("logitrack").doc("globalState").set(defaultState).then(() => {
+            alert("System wurde erfolgreich auf Werkseinstellungen zurückgesetzt.");
+            location.reload(); 
+        });
     }
 };
 
 function playSound(type) {
     if(!state.settings.sounds) return;
     try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); osc.connect(ctx.destination);
-        if(type === 'success') { osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.1); }
-        if(type === 'error') { osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, ctx.currentTime); osc.start(); osc.stop(ctx.currentTime + 0.3); }
-    } catch(e) {} 
+        const ctx = new (window.AudioContext||window.webkitAudioContext)(), osc = ctx.createOscillator();
+        osc.connect(ctx.destination);
+        if(type==='success'){ osc.type='sine'; osc.frequency.setValueAtTime(900,ctx.currentTime); osc.start(); osc.stop(ctx.currentTime+0.08); }
+        if(type==='error')  { osc.type='sawtooth'; osc.frequency.setValueAtTime(140,ctx.currentTime); osc.start(); osc.stop(ctx.currentTime+0.25); }
+    } catch(e){}
 }
 
-function formatDate(isoDate) {
-    if(state.settings.dateFormat === 'INT') return isoDate;
-    const p = isoDate.split('-'); if(p.length === 3) return `${p[2]}.${p[1]}.${p[0]}`; return isoDate;
+function formatDate(d) {
+    if(!d) return "";
+    if(state.settings.dateFormat==='INT') return d;
+    const p = d.split('-'); return p.length===3 ? `${p[2]}.${p[1]}.${p[0]}` : d;
 }
 
-// --- BACKUP & RESTORE ---
 window.exportBackup = () => {
-    logAudit("BACKUP", "System-Backup exportiert.");
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-    const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", `logitrack_backup_${new Date().toISOString().split('T')[0]}.json`); dl.click();
+    logAudit("BACKUP","Backup exportiert.");
+    const a = document.createElement('a');
+    a.href = "data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(state));
+    a.download = `logitrack_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
 };
 window.importBackup = (event) => {
     const file = event.target.files[0]; if(!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => { try { state = JSON.parse(e.target.result); saveData(); alert("Backup geladen!"); location.reload(); } catch(err) { alert("Fehler beim Lesen!"); } };
+    reader.onload = e => { try { state = JSON.parse(e.target.result); save(); alert("Backup geladen!"); location.reload(); } catch(err){ alert("Fehler!"); } };
     reader.readAsText(file);
 };
 
-// --- LOGIN & LOGOUT ---
-document.getElementById("loginBtn").addEventListener("click", () => {
-    const user = state.users.find(u => u.email === document.getElementById("loginEmail").value && u.password === document.getElementById("loginPassword").value);
+let codeReader = null, scanTargetId = null;
+
+window.openScanner = function(targetInputId) {
+    scanTargetId = targetInputId;
+    document.getElementById('scannerModal').classList.remove('hidden');
+    document.getElementById('scanner-result').textContent = 'Initialisiere Kamera...';
+
+    if(typeof ZXing === 'undefined') {
+        setTimeout(() => openScanner(targetInputId), 500);
+        return;
+    }
+
+    codeReader = new ZXing.BrowserMultiFormatReader();
+    codeReader.listVideoInputDevices().then(videoInputDevices => {
+        const sel = document.getElementById('cameraSelect');
+        sel.innerHTML = videoInputDevices.map((d,i) => `<option value="${d.deviceId}">${d.label || 'Kamera '+i}</option>`).join('');
+
+        const deviceId = videoInputDevices.length > 0 ? videoInputDevices[videoInputDevices.length-1].deviceId : undefined;
+        startDecode(deviceId);
+
+        sel.addEventListener('change', () => { codeReader.reset(); startDecode(sel.value); });
+    }).catch(err => {
+        document.getElementById('scanner-result').textContent = 'Kamera-Zugriff verweigert. Bitte Berechtigung erteilen.';
+    });
+};
+
+function startDecode(deviceId) {
+    document.getElementById('scanner-result').textContent = 'Warte auf Scan...';
+    codeReader.decodeFromVideoDevice(deviceId, 'scanner-video', (result, err) => {
+        if(result) {
+            const val = result.getText();
+            document.getElementById('scanner-result').textContent = '✅ Erkannt: ' + val;
+            playSound('success');
+            const targetEl = document.getElementById(scanTargetId);
+            if(targetEl) {
+                targetEl.value = val;
+                targetEl.dispatchEvent(new Event('input', {bubbles:true}));
+            }
+            setTimeout(() => closeScanner(), 800);
+        }
+    });
+}
+
+function closeScanner() {
+    if(codeReader) { codeReader.reset(); codeReader = null; }
+    document.getElementById('scannerModal').classList.add('hidden');
+    document.getElementById('scanner-result').textContent = 'Warte auf Scan...';
+    document.getElementById('cameraSelect').innerHTML = '';
+}
+document.getElementById('btnCloseScanner').addEventListener('click', closeScanner);
+
+// ─── LOGIN & LOGOUT ──────────────────────────────────────────────────────────
+document.getElementById("loginBtn").addEventListener("click", doLogin);
+document.getElementById("loginPassword").addEventListener("keydown", e => { if(e.key==='Enter') doLogin(); });
+
+function doLogin() {
+    const user = state.users.find(u => u.email===document.getElementById("loginEmail").value && u.password===document.getElementById("loginPassword").value);
     if(user) {
         state.currentUser = user;
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("app").classList.remove("hidden");
         document.getElementById("userNameDisplay").textContent = `${user.email} (${user.role})`;
-        if(user.role !== 'admin') document.querySelectorAll(".admin-only").forEach(el => el.classList.add("hidden"));
         
-        applySettings(); resetWizardTime(); initMasterData(); renderAll(); logAudit("LOGIN", "Benutzer hat sich angemeldet.");
+        document.body.className = `role-${user.role}`;
+        
+        applySettings(); resetWizardTime(); initMasterData(); renderAll();
+        logAudit("LOGIN","Benutzer hat sich angemeldet.");
+        
+        pingPresence();
+        setInterval(pingPresence, 45000); 
+
     } else {
-        document.getElementById("loginError").textContent = "Falsche Zugangsdaten!"; playSound('error');
+        document.getElementById("loginError").textContent = "Falsche Zugangsdaten!";
+        playSound('error');
     }
+}
+
+document.getElementById("logoutBtn").addEventListener("click", ()=>{ 
+    logAudit("LOGOUT","Abgemeldet."); 
+    if(state.currentUser) {
+        delete state.activeSessions[state.currentUser.email];
+        save();
+    }
+    location.reload(); 
 });
-document.getElementById("logoutBtn").addEventListener("click", () => { logAudit("LOGOUT", "Benutzer abgemeldet."); location.reload(); });
 
 function resetWizardTime() {
     document.getElementById("w-date").valueAsDate = new Date();
-    document.getElementById("w-time").value = new Date().toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'});
+    document.getElementById("w-time").value = new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
 }
 
-// --- NAVIGATION ---
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
 document.querySelectorAll(".nav-item").forEach(item => {
     item.addEventListener("click", () => {
-        document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active")); item.classList.add("active");
-        document.querySelectorAll(".page-section").forEach(p => p.classList.add("hidden")); document.getElementById(item.dataset.page).classList.remove("hidden");
-        if(item.dataset.page === 'dashPage') renderDashboard();
-        if(item.dataset.page === 'receivePage' && step === 2) setTimeout(()=>document.getElementById("w-barcode").focus(), 100);
-        if(item.dataset.page === 'outboundPage') setTimeout(()=>document.getElementById("outBarcode").focus(), 100);
+        document.querySelectorAll(".nav-item").forEach(i=>i.classList.remove("active"));
+        item.classList.add("active");
+        document.querySelectorAll(".page-section").forEach(p=>p.classList.add("hidden"));
+        document.getElementById(item.dataset.page).classList.remove("hidden");
+        
+        if(window.innerWidth <= 768) toggleMobileMenu();
+        if(item.dataset.page==='dashPage') renderDashboard();
+        if(item.dataset.page==='outboundPage') setTimeout(()=>document.getElementById("outBarcode").focus(),80);
+        if(item.dataset.page==='userPage') renderUsers(); 
     });
 });
 
-// --- WARENEINGANG WIZARD ---
 let step = 1;
-window.setRadio = (el, id, val) => { el.parentElement.querySelectorAll(".radio-btn").forEach(b => b.classList.remove("active")); el.classList.add("active"); document.getElementById(id).value = val; };
+window.setRadio = (el, id, val) => {
+    el.parentElement.querySelectorAll(".radio-btn").forEach(b=>b.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById(id).value = val;
 
-document.getElementById("btnNext").addEventListener("click", () => {
-    if(step < 4) {
-        document.getElementById(`step-${step}`).classList.add("hidden"); document.getElementById(`ind-${step}`).classList.remove("active"); document.getElementById(`ind-${step}`).classList.add("completed");
-        step++; document.getElementById(`step-${step}`).classList.remove("hidden"); document.getElementById(`ind-${step}`).classList.add("active"); document.getElementById("btnPrev").style.visibility = "visible";
-        if(step === 2) setTimeout(() => document.getElementById("w-barcode").focus(), 100);
-        if(step === 4) { document.getElementById("btnNext").classList.add("hidden"); document.getElementById("btnSubmit").classList.remove("hidden"); autoCheckStatus(); initSignature(); }
+    if(document.getElementById('w-packDamage').value==='ja' || document.getElementById('w-funcOk').value==='nein') {
+        document.getElementById('qa-details-box').classList.remove('hidden');
+    } else {
+        document.getElementById('qa-details-box').classList.add('hidden');
+    }
+};
+
+document.getElementById("w-status").addEventListener("change", (e) => {
+    const storageDiv = document.getElementById("storage-location-div");
+    if(e.target.value === "Quarantäne") {
+        storageDiv.classList.add("hidden");
+    } else {
+        storageDiv.classList.remove("hidden");
     }
 });
+
+document.getElementById("btnNext").addEventListener("click", () => {
+    if(step<4) {
+        document.getElementById(`step-${step}`).classList.add("hidden");
+        document.getElementById(`ind-${step}`).classList.remove("active");
+        document.getElementById(`ind-${step}`).classList.add("completed");
+        step++;
+        document.getElementById(`step-${step}`).classList.remove("hidden");
+        document.getElementById(`ind-${step}`).classList.add("active");
+        document.getElementById("btnPrev").style.visibility = "visible";
+        if(step===2) setTimeout(()=>document.getElementById("w-barcode").focus(),80);
+        if(step===4) { 
+            document.getElementById("btnNext").classList.add("hidden"); 
+            document.getElementById("btnSubmit").classList.remove("hidden"); 
+            autoCheckStatus(); 
+            initSignature(); 
+            
+            if(!document.getElementById('qa-details-box').classList.contains('hidden')){ 
+                const s = document.getElementById('w-status');
+                s.value="Quarantäne";
+                s.dispatchEvent(new Event('change'));
+            }
+        }
+    }
+});
+
 document.getElementById("btnPrev").addEventListener("click", () => {
-    if(step > 1) {
-        document.getElementById(`step-${step}`).classList.add("hidden"); document.getElementById(`ind-${step}`).classList.remove("active"); step--;
-        document.getElementById(`step-${step}`).classList.remove("hidden"); document.getElementById(`ind-${step}`).classList.add("active"); document.getElementById(`ind-${step}`).classList.remove("completed");
-        document.getElementById("btnNext").classList.remove("hidden"); document.getElementById("btnSubmit").classList.add("hidden"); if(step === 1) document.getElementById("btnPrev").style.visibility = "hidden";
+    if(step>1) {
+        document.getElementById(`step-${step}`).classList.add("hidden");
+        document.getElementById(`ind-${step}`).classList.remove("active");
+        step--;
+        document.getElementById(`step-${step}`).classList.remove("hidden");
+        document.getElementById(`ind-${step}`).classList.add("active");
+        document.getElementById(`ind-${step}`).classList.remove("completed");
+        document.getElementById("btnNext").classList.remove("hidden");
+        document.getElementById("btnSubmit").classList.add("hidden");
+        if(step===1) document.getElementById("btnPrev").style.visibility="hidden";
     }
 });
 
 function autoCheckStatus() {
-    const p = document.getElementById("w-packDamage").value; const f = document.getElementById("w-funcOk").value; const qS = parseInt(document.getElementById("w-qtySoll").value); const qI = parseInt(document.getElementById("w-qtyIst").value);
-    if(p === 'ja' || f === 'nein' || qS !== qI) { document.getElementById("w-status").value = "Quarantäne"; document.getElementById("w-status").style.color = "var(--danger)"; playSound('error'); } 
-    else { document.getElementById("w-status").value = "Einlagern"; document.getElementById("w-status").style.color = "var(--success)"; }
+    const p=document.getElementById("w-packDamage").value, f=document.getElementById("w-funcOk").value;
+    const qS=parseInt(document.getElementById("w-qtySoll").value), qI=parseInt(document.getElementById("w-qtyIst").value);
+    const statusEl = document.getElementById("w-status");
+    const storageDiv = document.getElementById("storage-location-div");
+
+    if(p==='ja'||f==='nein'||qS!==qI) {
+        statusEl.value="Quarantäne";
+        statusEl.style.color="var(--danger)";
+        storageDiv.classList.add("hidden");
+        playSound('error');
+    } else {
+        statusEl.value="Einlagern";
+        statusEl.style.color="var(--success)";
+        storageDiv.classList.remove("hidden");
+    }
 }
 
-const canvas = document.getElementById("signature-pad"); const ctx = canvas.getContext("2d"); let drawing = false;
-function initSignature() { canvas.width = canvas.parentElement.offsetWidth; ctx.lineWidth = 2; ctx.lineCap = "round"; }
-canvas.addEventListener("mousedown", () => drawing = true); canvas.addEventListener("mouseup", () => { drawing = false; ctx.beginPath(); });
-canvas.addEventListener("mousemove", (e) => { if(!drawing) return; const rect = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke(); });
-window.clearSignature = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+document.getElementById('w-qaPhoto').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(event){
+        const img = new Image();
+        img.onload = function(){
+            const canvas = document.createElement('canvas');
+            const maxW = 500; const scale = maxW/img.width;
+            canvas.width = maxW; canvas.height = img.height*scale;
+            canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+            document.getElementById('w-qaPhotoBase64').value = canvas.toDataURL('image/jpeg', 0.6); 
+        }
+        img.src = event.target.result;
+    }
+    reader.readAsDataURL(file);
+});
 
-// Form Submit (INBOUND)
+const sigCanvas = document.getElementById("signature-pad");
+const sigCtx = sigCanvas.getContext("2d");
+let drawing = false;
+function initSignature() { sigCanvas.width = sigCanvas.parentElement.offsetWidth; sigCtx.lineWidth=2; sigCtx.lineCap="round"; }
+sigCanvas.addEventListener("mousedown",   ()=>drawing=true);
+sigCanvas.addEventListener("mouseup",     ()=>{ drawing=false; sigCtx.beginPath(); });
+sigCanvas.addEventListener("touchend",    ()=>{ drawing=false; sigCtx.beginPath(); });
+sigCanvas.addEventListener("mousemove",   e=>{ if(!drawing) return; const r=sigCanvas.getBoundingClientRect(); sigCtx.lineTo(e.clientX-r.left, e.clientY-r.top); sigCtx.stroke(); });
+sigCanvas.addEventListener("touchmove",   e=>{ e.preventDefault(); if(!drawing) return; const r=sigCanvas.getBoundingClientRect(),t=e.touches[0]; sigCtx.lineTo(t.clientX-r.left, t.clientY-r.top); sigCtx.stroke(); }, {passive:false});
+sigCanvas.addEventListener("touchstart",  e=>{ e.preventDefault(); drawing=true; const r=sigCanvas.getBoundingClientRect(),t=e.touches[0]; sigCtx.beginPath(); sigCtx.moveTo(t.clientX-r.left, t.clientY-r.top); }, {passive:false});
+window.clearSignature = ()=>sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+
+window.addEventListener('resize', () => {
+    if(!document.getElementById('step-4').classList.contains('hidden')) {
+        const oldImage = sigCanvas.toDataURL();
+        initSignature();
+        const img = new Image(); img.src = oldImage;
+        img.onload = () => sigCtx.drawImage(img, 0, 0);
+    }
+});
+
 document.getElementById("btnSubmit").addEventListener("click", () => {
+    const rawStatus = document.getElementById("w-status").value;
+    const loc = rawStatus === "Quarantäne" ? "Sperrlager" : `${document.getElementById("w-shelf").value}-${document.getElementById("w-slot").value}`;
+
     const record = {
-        type: 'IN', id: Date.now(), date: document.getElementById("w-date").value, time: document.getElementById("w-time").value,
-        supplier: document.getElementById("w-supplier").value, note: document.getElementById("w-deliveryNote").value,
-        product: document.getElementById("w-product").value, barcode: document.getElementById("w-barcode").value || "Kein Barcode",
-        qtyIst: parseInt(document.getElementById("w-qtyIst").value) || 0, status: document.getElementById("w-status").value,
-        location: document.getElementById("w-status").value === "Quarantäne" ? "Sperrlager" : "Hauptlager", user: state.currentUser.email
+        type:'IN', id:Date.now(),
+        date: document.getElementById("w-date").value,
+        time: document.getElementById("w-time").value,
+        supplier: document.getElementById("w-supplier").value,
+        note:    document.getElementById("w-deliveryNote").value,
+        product: document.getElementById("w-product").value,
+        barcode: document.getElementById("w-barcode").value || "Kein Barcode",
+        qtyIst:  parseInt(document.getElementById("w-qtyIst").value)||0,
+        status:  rawStatus,
+        location: loc,
+        user: state.currentUser.email
     };
 
-    if(!record.note) { playSound('error'); return alert("Bitte Lieferscheinnummer eingeben!"); }
+    if(rawStatus === 'Quarantäne' && !document.getElementById('qa-details-box').classList.contains('hidden')) {
+        record.qaDetails = {
+            type: document.getElementById('w-qaType').value,
+            notes: document.getElementById('w-qaNotes').value,
+            photo: document.getElementById('w-qaPhotoBase64').value
+        };
+    }
+
+    if(!record.note){ playSound('error'); return alert("Bitte Lieferscheinnummer eingeben!"); }
     playSound('success');
 
-    const sigDataUrl = canvas.toDataURL();
+    const sigDataUrl = sigCanvas.toDataURL();
     state.records.unshift(record);
-    let item = state.inventory.find(i => i.barcode === record.barcode);
-    if(item) { item.qty += record.qtyIst; item.location = record.location; } 
-    else { state.inventory.push({ barcode: record.barcode, product: record.product, qty: record.qtyIst, location: record.location }); }
-    saveData();
-    logAudit("WARENEINGANG", `${record.qtyIst}x ${record.product} (BC: ${record.barcode}) eingebucht.`);
-
-    // Prepare A4 Print
-    document.getElementById("p-date").textContent = `${formatDate(record.date)} ${record.time}`; document.getElementById("p-user").textContent = record.user;
-    document.getElementById("p-supplier").textContent = record.supplier; document.getElementById("p-note").textContent = record.note;
-    document.getElementById("p-id").textContent = `IN-${record.id}`; document.getElementById("p-product").textContent = record.product;
-    document.getElementById("p-barcode").textContent = record.barcode; document.getElementById("p-qty").textContent = `${record.qtyIst} Stk`;
-    document.getElementById("p-status").textContent = record.location;
     
-    // Check if signature is empty (simplified check)
-    if(sigDataUrl.length > 5000) { document.getElementById("p-signature-img").src = sigDataUrl; document.getElementById("p-signature-img").style.display = "block"; } 
-    else { document.getElementById("p-signature-img").style.display = "none"; }
+    let item = state.inventory.find(i=>i.barcode===record.barcode);
+    if(item){ 
+        item.qty += record.qtyIst; 
+        item.location = record.location; 
+    } else { 
+        state.inventory.push({ barcode:record.barcode, product:record.product, qty:record.qtyIst, location:record.location, minStock:0, supplier:record.supplier }); 
+    }
+    save();
+    logAudit("WARENEINGANG",`${record.qtyIst}x ${record.product} (BC: ${record.barcode}) eingebucht in ${loc}.`);
 
-    // Prepare Label Print
-    document.getElementById("l-product").textContent = record.product.substring(0, 20); document.getElementById("l-barcode").textContent = record.barcode;
-    document.getElementById("l-date").textContent = formatDate(record.date); document.getElementById("l-qty").textContent = record.qtyIst;
-    document.getElementById("label-qr").innerHTML = ""; // Clear old QR
-    new QRCode(document.getElementById("label-qr"), { text: record.barcode, width: 60, height: 60, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.L });
+    document.getElementById("p-date").textContent=`${formatDate(record.date)} ${record.time}`;
+    document.getElementById("p-user").textContent=record.user;
+    document.getElementById("p-supplier").textContent=record.supplier;
+    document.getElementById("p-note").textContent=record.note;
+    document.getElementById("p-id").textContent=`IN-${record.id}`;
+    document.getElementById("p-product").textContent=record.product;
+    document.getElementById("p-barcode").textContent=record.barcode;
+    document.getElementById("p-qty").textContent=`${record.qtyIst} Stk`;
+    document.getElementById("p-status").textContent=record.location;
+    if(sigDataUrl.length>5000){ document.getElementById("p-signature-img").src=sigDataUrl; document.getElementById("p-signature-img").style.display="block"; }
+    else { document.getElementById("p-signature-img").style.display="none"; }
 
-    // Prepare Modal
-    document.getElementById("prev-product").textContent = record.product; document.getElementById("prev-qty").textContent = record.qtyIst;
-    document.getElementById("prev-status").textContent = record.location; document.getElementById("prev-barcode").textContent = record.barcode;
+    prepareLabelPrint(record.barcode, record.product, record.qtyIst, formatDate(record.date), 'label-qr-print');
+
+    document.getElementById("prev-product").textContent=record.product;
+    document.getElementById("prev-qty").textContent=record.qtyIst;
+    document.getElementById("prev-status").textContent=record.location;
+    document.getElementById("prev-barcode").textContent=record.barcode;
     document.getElementById("printModal").classList.remove("hidden");
 
-    // Reset Form
-    document.querySelectorAll("#wizardForm input[type='text'], #wizardForm input[type='number']").forEach(i => i.value = ""); clearSignature(); resetWizardTime();
-    document.getElementById(`step-4`).classList.add("hidden"); document.getElementById(`ind-4`).classList.remove("active"); step = 1; document.getElementById(`step-1`).classList.remove("hidden"); document.querySelectorAll('.step-indicator').forEach(i => { i.classList.remove('completed'); i.classList.remove('active'); }); document.getElementById('ind-1').classList.add('active'); document.getElementById("btnNext").classList.remove("hidden"); document.getElementById("btnSubmit").classList.add("hidden"); document.getElementById("btnPrev").style.visibility = "hidden";
+    document.querySelectorAll("#wizardForm input[type='text'], #wizardForm input[type='number']").forEach(i=>i.value="");
+    document.getElementById('w-qaPhotoBase64').value = "";
+    document.getElementById('w-qaPhoto').value = "";
+    document.getElementById('w-qaNotes').value = "";
+    clearSignature(); resetWizardTime();
+    
+    document.getElementById('step-4').classList.add('hidden');
+    document.getElementById('ind-4').classList.remove('active');
+    step=1;
+    document.getElementById('step-1').classList.remove('hidden');
+    document.querySelectorAll('.step-indicator').forEach(i=>{ i.classList.remove('completed','active'); });
+    document.getElementById('ind-1').classList.add('active');
+    document.getElementById("btnNext").classList.remove("hidden");
+    document.getElementById("btnSubmit").classList.add("hidden");
+    document.getElementById("btnPrev").style.visibility="hidden";
     renderAll();
 });
 
-// --- WARENAUSGANG (OUTBOUND) ---
+function prepareLabelPrint(barcode, product, qty, date, containerId) {
+    document.getElementById("l-product").textContent=product.substring(0,22);
+    document.getElementById("l-barcode").textContent=barcode;
+    document.getElementById("l-date").textContent=date;
+    document.getElementById("l-qty").textContent=qty;
+    const container = document.getElementById(containerId);
+    container.innerHTML="";
+    try {
+        new QRCode(container, { text:barcode, width:60, height:60, colorDark:"#000", colorLight:"#fff", correctLevel:QRCode.CorrectLevel.L });
+    } catch(e){}
+}
+
+window.openLabelModal = function(barcode) {
+    const item = state.inventory.find(i=>i.barcode===barcode);
+    if(!item) return;
+    document.getElementById("lm-product").textContent=item.product;
+    document.getElementById("lm-barcode").textContent=item.barcode;
+    document.getElementById("lm-qty").textContent=item.qty;
+    document.getElementById("lm-location").textContent=item.location;
+    const qrDiv = document.getElementById("label-modal-qr");
+    qrDiv.innerHTML="";
+    try {
+        new QRCode(qrDiv, { text:item.barcode, width:64, height:64, colorDark:"#000", colorLight:"#fff", correctLevel:QRCode.CorrectLevel.L });
+    } catch(e){}
+    document.getElementById("btnPrintLabelItem").onclick = () => {
+        document.getElementById("labelModal").classList.add("hidden");
+        prepareLabelPrint(item.barcode, item.product, item.qty, formatDate(new Date().toISOString().split('T')[0]), 'label-qr-print');
+        document.body.className="print-mode-label"; window.print();
+        setTimeout(()=>{ document.body.className=""; applySettings(); }, 800);
+    };
+    document.getElementById("labelModal").classList.remove("hidden");
+};
+
+window.printA4FromInv = function(barcode) {
+    const item = state.inventory.find(i => i.barcode === barcode);
+    if(!item) return;
+    
+    const lastIn = state.records.find(r => r.barcode === barcode && r.type === 'IN') || {};
+    
+    document.getElementById("p-date").textContent = formatDate(lastIn.date || new Date().toISOString().split('T')[0]) + ' ' + (lastIn.time || '');
+    document.getElementById("p-user").textContent = state.currentUser.email;
+    document.getElementById("p-supplier").textContent = lastIn.supplier || "Bestandsnachdruck";
+    document.getElementById("p-note").textContent = lastIn.note || "-";
+    document.getElementById("p-id").textContent = lastIn.id ? `IN-${lastIn.id}` : "MANUELL";
+    
+    document.getElementById("p-product").textContent = item.product;
+    document.getElementById("p-barcode").textContent = item.barcode;
+    document.getElementById("p-qty").textContent = `${item.qty} Stk`;
+    document.getElementById("p-status").textContent = item.location;
+    document.getElementById("p-signature-img").style.display = "none";
+
+    document.body.className = "print-mode-a4";
+    window.print();
+    setTimeout(() => { document.body.className = ""; applySettings(); }, 800);
+};
+
 let currentOutItem = null;
-document.getElementById("outBarcode").addEventListener("input", (e) => {
+document.getElementById("outBarcode").addEventListener("input", e => {
     const val = e.target.value.trim();
-    currentOutItem = state.inventory.find(i => i.barcode === val);
+    currentOutItem = state.inventory.find(i=>i.barcode===val && i.qty > 0);
     if(currentOutItem) {
         document.getElementById("outboundDetails").classList.remove("hidden");
-        document.getElementById("outProduct").textContent = currentOutItem.product;
-        document.getElementById("outCurrentQty").textContent = currentOutItem.qty;
-        document.getElementById("outLocation").textContent = currentOutItem.location;
+        document.getElementById("outProduct").textContent=currentOutItem.product;
+        document.getElementById("outCurrentQty").textContent=currentOutItem.qty;
+        document.getElementById("outLocation").textContent=currentOutItem.location;
     } else {
         document.getElementById("outboundDetails").classList.add("hidden");
     }
 });
 
 document.getElementById("btnSubmitOutbound").addEventListener("click", () => {
-    if(!currentOutItem) { playSound('error'); return alert("Bitte gültigen Barcode scannen!"); }
+    if(!currentOutItem){ playSound('error'); return alert("Bitte gültigen Barcode scannen (Bestand muss > 0 sein)!"); }
     const outQty = parseInt(document.getElementById("outQty").value);
-    if(outQty > currentOutItem.qty) { playSound('error'); return alert(`Nicht genug Bestand! Aktuell nur ${currentOutItem.qty} vorhanden.`); }
-    if(outQty < 1 || isNaN(outQty)) return alert("Ungültige Menge");
-
+    if(outQty>currentOutItem.qty){ playSound('error'); return alert(`Nicht genug Bestand! Nur ${currentOutItem.qty} vorhanden.`); }
+    if(outQty<1||isNaN(outQty)) return alert("Ungültige Menge");
     playSound('success');
-    // Deduct
-    currentOutItem.qty -= outQty;
     
-    // Add Record
+    currentOutItem.qty-=outQty;
+    
     const record = {
-        type: 'OUT', id: Date.now(), date: new Date().toISOString().split('T')[0], time: new Date().toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'}),
-        supplier: "Warenausgang", note: document.getElementById("outNote").value || "Keine Notiz",
-        product: currentOutItem.product, barcode: currentOutItem.barcode,
-        qtyIst: outQty, status: "Ausgebucht", user: state.currentUser.email
+        type:'OUT', id:Date.now(), date:new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),
+        supplier:"Warenausgang", note:document.getElementById("outNote").value||"Keine Notiz",
+        product:currentOutItem.product, barcode:currentOutItem.barcode,
+        qtyIst:outQty, status:"Ausgebucht", user:state.currentUser.email
     };
     state.records.unshift(record);
-    saveData();
-    logAudit("WARENAUSGANG", `${outQty}x ${record.product} (BC: ${record.barcode}) ausgebucht.`);
-
+    save();
+    logAudit("WARENAUSGANG",`${outQty}x ${record.product} (BC: ${record.barcode}) ausgebucht. Neuer Bestand: ${currentOutItem.qty}`);
+    
     alert("Erfolgreich ausgebucht!");
-    document.getElementById("outBarcode").value = "";
-    document.getElementById("outQty").value = "1";
-    document.getElementById("outNote").value = "";
+    document.getElementById("outBarcode").value="";
+    document.getElementById("outQty").value="1";
+    document.getElementById("outNote").value="";
     document.getElementById("outboundDetails").classList.add("hidden");
-    currentOutItem = null;
+    currentOutItem=null;
     document.getElementById("outBarcode").focus();
     renderAll();
 });
 
-// Modal Print Routing
-function handleWorkflowRoute() { if(state.settings.workflow === 'dash') document.getElementById("navDash").click(); else document.getElementById("navRec").click(); }
-document.getElementById("btnSkipPrint").addEventListener("click", () => { document.getElementById("printModal").classList.add("hidden"); handleWorkflowRoute(); });
-document.getElementById("btnDoPrintA4").addEventListener("click", () => {
-    document.body.className = "print-mode-a4"; document.getElementById("printModal").classList.add("hidden"); window.print(); setTimeout(() => { document.body.className = ""; handleWorkflowRoute(); applySettings(); }, 1000);
+function handleRoute(){ if(state.settings.workflow==='dash') document.querySelector('[data-page="dashPage"]').click(); else document.querySelector('[data-page="receivePage"]').click(); }
+document.getElementById("btnSkipPrint").addEventListener("click",()=>{ document.getElementById("printModal").classList.add("hidden"); handleRoute(); });
+document.getElementById("btnDoPrintA4").addEventListener("click",()=>{
+    document.body.className="print-mode-a4"; document.getElementById("printModal").classList.add("hidden"); window.print();
+    setTimeout(()=>{ document.body.className=""; handleRoute(); applySettings(); },800);
 });
-document.getElementById("btnDoPrintLabel").addEventListener("click", () => {
-    document.body.className = "print-mode-label"; document.getElementById("printModal").classList.add("hidden"); window.print(); setTimeout(() => { document.body.className = ""; handleWorkflowRoute(); applySettings(); }, 1000);
+document.getElementById("btnDoPrintLabel").addEventListener("click",()=>{
+    document.body.className="print-mode-label"; document.getElementById("printModal").classList.add("hidden"); window.print();
+    setTimeout(()=>{ document.body.className=""; handleRoute(); applySettings(); },800);
 });
 
-// --- RENDER FUNKTIONEN ---
-function renderAll() { renderDashboard(); renderInventory(); renderHistory(); renderUsers(); renderAudit(); }
+function renderAll(){ renderDashboard(); renderInventory(); renderHistory(); renderUsers(); renderAudit(); }
 
 let tChart, gChart;
 function renderDashboard() {
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById("statToday").textContent = state.records.filter(r => r.date === today && r.type !== 'OUT').length;
-    document.getElementById("statOutToday").textContent = state.records.filter(r => r.date === today && r.type === 'OUT').length;
-    document.getElementById("statTotalItems").textContent = state.inventory.reduce((sum, item) => sum + item.qty, 0);
-    document.getElementById("statIssues").textContent = state.records.filter(r => r.status === 'Quarantäne').length;
+    document.getElementById("dashDate").textContent = formatDate(today);
+    document.getElementById("statToday").textContent     = state.records.filter(r=>r.date===today&&r.type!=='OUT').length;
+    document.getElementById("statOutToday").textContent  = state.records.filter(r=>r.date===today&&r.type==='OUT').length;
+    document.getElementById("statTotalItems").textContent= state.inventory.reduce((s,i)=>s+i.qty,0);
+    document.getElementById("statIssues").textContent    = state.records.filter(r=>r.status==='Quarantäne').length;
+    
+    const critCount = state.inventory.filter(i => i.qty <= (i.minStock || 0) && i.qty > 0).length;
+    document.getElementById("statCritical").textContent  = critCount;
 
-    if(tChart) tChart.destroy(); if(gChart) gChart.destroy();
-    Chart.defaults.color = state.settings.theme === 'dark' ? '#cbd5e1' : '#64748b';
+    if(typeof Chart === 'undefined') return;
 
-    const dates = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - i); return d.toISOString().split('T')[0]; }).reverse();
-    const trendDataIn = dates.map(d => state.records.filter(r => r.date === d && r.type !== 'OUT').length);
-    tChart = new Chart(document.getElementById('trendChart'), { type: 'line', data: { labels: dates.map(d => formatDate(d).substring(0,5)), datasets: [{ label: 'Eingänge', data: trendDataIn, borderColor: state.settings.color, backgroundColor: state.settings.color+'33', fill: true, tension: 0.3 }] }, options: { maintainAspectRatio: false } });
+    if(tChart) tChart.destroy();
+    if(gChart) gChart.destroy();
+    Chart.defaults.color = state.settings.theme==='dark' ? '#8b949e':'#64748b';
+    Chart.defaults.borderColor = state.settings.theme==='dark' ? '#30363d':'#e2e8f0';
 
-    const okCount = state.records.filter(r => r.status === 'Einlagern').length; const rekCount = state.records.filter(r => r.status === 'Quarantäne').length;
-    const total = okCount + rekCount || 1; const percent = Math.round((okCount / total) * 100);
-    document.getElementById("gaugeLabel").textContent = `${percent}% Fehlerfrei`;
-    gChart = new Chart(document.getElementById('qualityGauge'), { type: 'doughnut', data: { labels: ['OK', 'Mängel'], datasets: [{ data: [okCount || 1, rekCount], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }] }, options: { rotation: -90, circumference: 180, maintainAspectRatio: false, cutout: '75%' } });
+    const dates = [...Array(7)].map((_,i)=>{ const d=new Date(); d.setDate(d.getDate()-i); return d.toISOString().split('T')[0]; }).reverse();
+    tChart = new Chart(document.getElementById('trendChart'),{
+        type:'line',
+        data:{ labels:dates.map(d=>formatDate(d).substring(0,5)), datasets:[
+            { label:'Eingänge', data:dates.map(d=>state.records.filter(r=>r.date===d&&r.type!=='OUT').length), borderColor:state.settings.color, backgroundColor:state.settings.color+'22', fill:true, tension:.35, pointRadius:4, pointBackgroundColor:state.settings.color },
+            { label:'Ausgänge', data:dates.map(d=>state.records.filter(r=>r.date===d&&r.type==='OUT').length), borderColor:'#059669', backgroundColor:'#05966922', fill:true, tension:.35, pointRadius:4, pointBackgroundColor:'#059669' }
+        ]},
+        options:{ maintainAspectRatio:false, plugins:{ legend:{ labels:{ boxWidth:12 } } } }
+    });
+
+    const okC=state.records.filter(r=>r.status==='Einlagern').length;
+    const bC=state.records.filter(r=>r.status==='Quarantäne').length;
+    const total=okC+bC||1;
+    document.getElementById("gaugeLabel").textContent=`${Math.round(okC/total*100)}% Fehlerfrei`;
+    gChart = new Chart(document.getElementById('qualityGauge'),{
+        type:'doughnut',
+        data:{ labels:['OK','Mängel'], datasets:[{ data:[okC||1,bC], backgroundColor:['#059669','#dc2626'], borderWidth:0 }]},
+        options:{ rotation:-90, circumference:180, maintainAspectRatio:false, cutout:'72%', plugins:{ legend:{ position:'bottom', labels:{ boxWidth:12 } } } }
+    });
 }
 
-// Master Data
-function initMasterData() { document.querySelector(".master-supplier-list").innerHTML = state.masterSuppliers.map(s => `<option>${s}</option>`).join(""); document.querySelector(".master-product-list").innerHTML = state.masterProducts.map(p => `<option>${p}</option>`).join(""); renderMasterAdmin(); }
-function renderMasterAdmin() { document.getElementById("supplierList").innerHTML = state.masterSuppliers.map((s, i) => `<li>${s} <i class="fas fa-trash" style="float:right; cursor:pointer; color:var(--danger);" onclick="delMaster('s', ${i})"></i></li>`).join(""); document.getElementById("productList").innerHTML = state.masterProducts.map((p, i) => `<li>${p} <i class="fas fa-trash" style="float:right; cursor:pointer; color:var(--danger);" onclick="delMaster('p', ${i})"></i></li>`).join(""); }
-window.addMaster = (type) => { if(type === 'supplier' && document.getElementById("newSupplier").value) { state.masterSuppliers.push(document.getElementById("newSupplier").value); document.getElementById("newSupplier").value = ""; logAudit("STAMMDATEN", "Neuer Lieferant hinzugefügt."); } if(type === 'product' && document.getElementById("newProduct").value) { state.masterProducts.push(document.getElementById("newProduct").value); document.getElementById("newProduct").value = ""; logAudit("STAMMDATEN", "Neue Kategorie hinzugefügt."); } saveData(); initMasterData(); };
-window.delMaster = (type, index) => { if(type === 's') state.masterSuppliers.splice(index, 1); else state.masterProducts.splice(index, 1); logAudit("STAMMDATEN", "Stammdatensatz gelöscht."); saveData(); initMasterData(); };
+function initMasterData(){
+    document.querySelectorAll(".master-supplier-list").forEach(el=>el.innerHTML=state.masterSuppliers.map(s=>`<option value="${s.name}">${s.name}</option>`).join(""));
+    document.querySelectorAll(".master-product-list").forEach(el=>el.innerHTML=state.masterProducts.map(p=>`<option value="${p}">${p}</option>`).join(""));
+    renderMasterAdmin();
+}
 
-// Inventory & History
-function renderInventory(filter = "") {
-    document.getElementById("inventoryBody").innerHTML = state.inventory.filter(i => i.barcode.toLowerCase().includes(filter.toLowerCase()) || i.product.toLowerCase().includes(filter.toLowerCase())).map(i => `<tr><td><b>${i.barcode}</b></td><td>${i.product}</td><td><span class="badge badge-success">${i.qty} Stk</span></td><td><span class="badge ${i.location === 'Sperrlager' ? 'badge-danger' : 'badge-success'}"><i class="fas fa-map-marker-alt"></i> ${i.location}</span></td><td class="admin-only ${state.currentUser.role !== 'admin' ? 'hidden' : ''}"><button class="btn btn-outline" onclick="editInv('${i.barcode}')"><i class="fas fa-edit"></i></button></td></tr>`).join("");
+function renderMasterAdmin(){
+    document.getElementById("supplierList").innerHTML=state.masterSuppliers.map((s)=>{
+        const details = [s.contact, s.email, s.phone].filter(Boolean).join(" | ");
+        return `<li style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">
+            <div><b>${s.name}</b><br><span style="font-size:0.75rem;color:var(--text-muted);">${details}</span></div>
+            <button class="btn btn-sm btn-outline" onclick="delSupplier(${s.id})" style="padding:4px 8px;"><i class="fas fa-trash" style="color:var(--danger);"></i></button>
+        </li>`;
+    }).join("");
+    
+    document.getElementById("productList").innerHTML=state.masterProducts.map((p,i)=>`<li style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);">${p}<button class="btn btn-sm btn-outline" onclick="delMaster('p',${i})" style="padding:4px 8px;"><i class="fas fa-trash" style="color:var(--danger);"></i></button></li>`).join("");
 }
-function renderHistory(filter = "") {
-    document.getElementById("historyBody").innerHTML = state.records.filter(r => r.note.toLowerCase().includes(filter.toLowerCase()) || r.barcode.toLowerCase().includes(filter.toLowerCase())).map(r => `<tr><td><span class="badge ${r.type === 'OUT' ? 'badge-warning' : 'badge-info'}">${r.type === 'OUT' ? 'AUSGANG' : 'EINGANG'}</span></td><td>${formatDate(r.date)} <small>${r.time}</small></td><td>${r.user}</td><td><b>${r.product}</b><br><small>BC: ${r.barcode}</small></td><td>${r.type === 'OUT' ? '-'+r.qtyIst : '+'+r.qtyIst}</td><td>${r.type === 'OUT' ? r.note : 'LS: '+r.note}</td><td class="admin-only ${state.currentUser.role !== 'admin' ? 'hidden' : ''}"><button class="btn btn-outline" onclick="editHist(${r.id})"><i class="fas fa-edit"></i></button></td></tr>`).join("");
+
+window.addSupplier = () => {
+    const n = document.getElementById("nsName").value;
+    if(!n) return alert("Firmenname wird benötigt!");
+    state.masterSuppliers.push({ 
+        id: Date.now(), 
+        name: n, 
+        email: document.getElementById("nsEmail").value, 
+        contact: document.getElementById("nsContact").value, 
+        phone: document.getElementById("nsPhone").value,
+        orderUrl: document.getElementById("nsUrl").value 
+    });
+    logAudit("STAMMDATEN","Lieferant (Erweitert) hinzugefügt.");
+    save(); initMasterData();
+    
+    ["nsName","nsEmail","nsContact","nsPhone","nsUrl"].forEach(id => document.getElementById(id).value = '');
+};
+window.delSupplier = (id) => { state.masterSuppliers = state.masterSuppliers.filter(s=>s.id!==id); logAudit("STAMMDATEN","Lieferant gelöscht."); save(); initMasterData(); };
+
+window.addCategory=()=>{
+    if(document.getElementById("newProduct").value){ state.masterProducts.push(document.getElementById("newProduct").value); document.getElementById("newProduct").value=""; logAudit("STAMMDATEN","Kategorie hinzugefügt."); }
+    save(); initMasterData();
+};
+window.delMaster=(type,i)=>{ state.masterProducts.splice(i,1); logAudit("STAMMDATEN","Kategorie gelöscht."); save(); initMasterData(); };
+
+document.getElementById("showZeroStock").addEventListener("change", () => renderInventory(document.getElementById("searchInventory").value));
+
+function renderInventory(filter=""){
+    const isAdmin = (state.currentUser.role === 'admin' || state.currentUser.role === 'superadmin' || state.currentUser.role === 'manager');
+    const showEmpty = document.getElementById("showZeroStock").checked;
+    
+    document.getElementById("inventoryBody").innerHTML = state.inventory
+        .filter(i => showEmpty ? true : i.qty > 0)
+        .filter(i => i.barcode.toLowerCase().includes(filter.toLowerCase()) || i.product.toLowerCase().includes(filter.toLowerCase()) || i.location.toLowerCase().includes(filter.toLowerCase()))
+        .map(i => {
+            const isLow = i.qty <= (i.minStock || 0) && i.qty > 0;
+            return `<tr class="${isLow ? 'low-stock' : ''}">
+                <td><code style="font-family:'DM Mono',monospace;font-size:0.8rem;">${i.barcode}</code></td>
+                <td><b style="${i.qty === 0 ? 'color:var(--text-muted); text-decoration:line-through;' : ''}">${i.product}</b></td>
+                <td><span class="badge ${i.qty === 0 ? 'badge-gray' : (isLow ? 'badge-danger' : 'badge-success')}">${i.qty} Stk</span></td>
+                <td style="color:var(--text-muted); font-size:0.8rem;">${i.minStock || 0}</td>
+                <td><span class="badge ${i.location==='Sperrlager'?'badge-danger':'badge-info'}">${i.location}</span></td>
+                <td>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-sm btn-outline" onclick="openLabelModal('${i.barcode}')" title="Etikett drucken"><i class="fas fa-tag" style="color:var(--accent);"></i></button>
+                        <button class="btn btn-sm btn-outline" onclick="printA4FromInv('${i.barcode}')" title="A4 drucken"><i class="fas fa-file-alt"></i> A4</button>
+                    </div>
+                </td>
+                <td class="action-col">
+                    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                        <button class="btn btn-sm btn-outline" onclick="showDetailsInv('${i.barcode}')" title="Details ansehen"><i class="fas fa-info-circle"></i></button>
+                        <button class="btn btn-sm btn-primary" onclick="reorderItem('${i.barcode}')" title="Nachbestellen"><i class="fas fa-shopping-cart"></i></button>
+                        <button class="btn btn-sm btn-outline ${isAdmin?'':'hidden'}" onclick="editInv('${i.barcode}')" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join("");
 }
-document.getElementById("searchInventory").addEventListener("input", (e) => renderInventory(e.target.value)); document.getElementById("searchHistory").addEventListener("input", (e) => renderHistory(e.target.value));
+
+function renderHistory(filter=""){
+    const isAdmin = (state.currentUser.role === 'admin' || state.currentUser.role === 'superadmin');
+    document.getElementById("historyBody").innerHTML = state.records
+        .filter(r=>r.note.toLowerCase().includes(filter.toLowerCase())||r.barcode.toLowerCase().includes(filter.toLowerCase())||r.product.toLowerCase().includes(filter.toLowerCase()))
+        .map(r=>`<tr>
+            <td><span class="badge ${r.type==='OUT'?'badge-out':'badge-info'}">${r.type==='OUT'?'AUSGANG':'EINGANG'}</span></td>
+            <td style="font-size:0.8rem;">${formatDate(r.date)}<br><span style="color:var(--text-muted);">${r.time}</span></td>
+            <td>${r.user}</td>
+            <td><b>${r.product}</b><br><code style="font-size:0.75rem;color:var(--text-muted);">${r.barcode}</code></td>
+            <td style="font-weight:700;color:${r.type==='OUT'?'var(--danger)':'var(--success)'};">${r.type==='OUT'?'-':'+'}${r.qtyIst}</td>
+            <td style="font-size:0.8rem;">${r.type==='OUT'?r.note:'LS: '+r.note}</td>
+            <td class="action-col">
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button class="btn btn-sm btn-outline" onclick="showDetails(${r.id})" title="Details"><i class="fas fa-info-circle"></i></button>
+                    ${r.status==='Quarantäne' ? `<button class="btn btn-sm btn-danger" onclick="sendComplaint(${r.id})" title="Reklamation per E-Mail"><i class="fas fa-envelope"></i></button>` : ''}
+                    <button class="btn btn-sm btn-outline ${isAdmin?'':'hidden'}" onclick="editHist(${r.id})" title="Bearbeiten"><i class="fas fa-edit"></i></button>
+                </div>
+            </td>
+        </tr>`).join("");
+}
+
+document.getElementById("searchInventory").addEventListener("input",e=>renderInventory(e.target.value));
+document.getElementById("searchHistory").addEventListener("input",e=>renderHistory(e.target.value));
 
 window.editInv = (barcode) => {
-    let item = state.inventory.find(i => i.barcode === barcode); let nQty = prompt(`Neuer Bestand für ${item.product}:`, item.qty);
-    if(nQty !== null && !isNaN(nQty)) { logAudit("BESTANDSKORREKTUR", `Barcode ${barcode}: Von ${item.qty} auf ${nQty} geändert.`); item.qty = parseInt(nQty); saveData(); renderInventory(); renderDashboard(); }
-};
-window.editHist = (id) => {
-    let rec = state.records.find(r => r.id === id); let nNote = prompt("Referenz/Notiz korrigieren:", rec.note);
-    if(nNote !== null) { logAudit("HISTORIE KORRIGIERT", `ID ${id}: Notiz geändert auf ${nNote}`); rec.note = nNote; saveData(); renderHistory(); }
+    let item = state.inventory.find(i => i.barcode === barcode);
+    
+    let n = prompt(`Schritt 1/3 - Neuer Bestand für ${item.product}:`, item.qty);
+    if(n === null || isNaN(n)) return; 
+    
+    let nMin = prompt(`Schritt 2/3 - Mindestbestand für ${item.product}:`, item.minStock || 0);
+    if(nMin === null || isNaN(nMin)) return; 
+
+    let p = prompt(`Schritt 3/3 - Lagerplatz anpassen (z.B. A-05):`, item.location);
+    if(p === null) return; 
+
+    let oldQty = item.qty;
+    item.qty = parseInt(n);
+    item.minStock = parseInt(nMin);
+    item.location = p.trim() || item.location;
+    
+    logAudit("BESTANDSKORREKTUR", `BC ${barcode}: Menge ${oldQty}→${item.qty}, Min. ${item.minStock}, Platz ${item.location}`); 
+    
+    save(); 
 };
 
-// Users
-function renderUsers() { document.getElementById("userTableBody").innerHTML = state.users.map(u => `<tr><td>${u.email}</td><td><span class="badge ${u.role === 'admin' ? 'badge-danger' : 'badge-success'}">${u.role}</span></td><td><button class="btn btn-danger" onclick="delUser('${u.email}')" ${u.email === state.currentUser.email ? 'disabled' : ''}><i class="fas fa-trash"></i></button></td></tr>`).join(""); }
-document.getElementById("saveUserBtn").addEventListener("click", () => { const e = document.getElementById("newUserEmail").value; const p = document.getElementById("newUserPassword").value; if(!e || !p) return alert("Felder ausfüllen"); state.users.push({email: e, password: p, role: document.getElementById("newUserRole").value}); logAudit("BENUTZER", `Neuer Benutzer ${e} angelegt.`); saveData(); renderUsers(); });
-window.delUser = (email) => { state.users = state.users.filter(u => u.email !== email); logAudit("BENUTZER", `Benutzer ${email} gelöscht.`); saveData(); renderUsers(); };
+window.editHist=(id)=>{
+    let rec=state.records.find(r=>r.id===id);
+    let n=prompt("Notiz korrigieren:",rec.note);
+    if(n!==null){ logAudit("HISTORIE KORRIGIERT",`ID ${id}: ${n}`); rec.note=n; save(); renderHistory(); }
+};
 
-// CSV
-document.getElementById("exportCsvBtn").addEventListener("click", () => { let csv = "Typ;Datum;Zeit;Mitarbeiter;Lieferant;Notiz/LS;Produkt;Barcode;Menge;Status\n"; state.records.forEach(r => csv += `${r.type||'IN'};${formatDate(r.date)};${r.time};${r.user};${r.supplier};${r.note};${r.product};${r.barcode};${r.qtyIst};${r.status}\n`); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "buchungs_historie.csv"; link.click(); logAudit("EXPORT", "CSV Historie exportiert."); });
+function renderUsers(){
+    const now = Date.now();
+    document.getElementById("userTableBody").innerHTML=state.users.map(u=>{
+        const lastActive = state.activeSessions[u.email] || 0;
+        const isOnline = (now - lastActive) < 90000; 
+        
+        const statusHtml = isOnline 
+            ? `<div style="color:var(--success); font-size:0.75rem; margin-top:4px;"><i class="fas fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> Online</div>`
+            : `<div style="color:var(--text-muted); font-size:0.75rem; margin-top:4px;"><i class="far fa-circle" style="font-size:0.6rem; vertical-align:middle;"></i> Offline</div>`;
+
+        return `<tr>
+            <td><b>${u.email}</b>${statusHtml}</td>
+            <td><span class="badge badge-info">${u.role}</span></td>
+            <td>
+            <div style="display:flex; gap:6px;">
+                <button class="btn btn-sm btn-outline" onclick="resetPassword('${u.email}')" title="Passwort ändern">
+                    <i class="fas fa-key"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="delUser('${u.email}')" ${u.email===state.currentUser.email?'disabled':''} title="Benutzer löschen">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            </td>
+        </tr>`;
+    }).join("");
+}
+
+window.resetPassword = (email) => {
+    const newPw = prompt(`Neues Passwort für den Benutzer "${email}" festlegen:`);
+    if(newPw) {
+        const user = state.users.find(u => u.email === email);
+        if(user) {
+            user.password = newPw;
+            logAudit("BENUTZER", `Passwort für ${email} durch Admin zurückgesetzt.`);
+            save();
+            alert(`Das Passwort für ${email} wurde erfolgreich geändert.`);
+            renderUsers();
+        }
+    }
+};
+
+document.getElementById("saveUserBtn").addEventListener("click",()=>{
+    const e=document.getElementById("newUserEmail").value, p=document.getElementById("newUserPassword").value;
+    if(!e||!p) return alert("Felder ausfüllen");
+    state.users.push({email:e,password:p,role:document.getElementById("newUserRole").value});
+    logAudit("BENUTZER",`${e} angelegt.`); save(); renderUsers();
+});
+window.delUser=(email)=>{ state.users=state.users.filter(u=>u.email!==email); logAudit("BENUTZER",`${email} gelöscht.`); save(); renderUsers(); };
+
+document.getElementById("exportCsvBtn").addEventListener("click",()=>{
+    let csv="Typ;Datum;Zeit;Mitarbeiter;Lieferant;Notiz;Produkt;Barcode;Menge;Status;Platz;MinBestand\n";
+    state.records.forEach(r=>{
+        let i = state.inventory.find(inv=>inv.barcode === r.barcode);
+        let m = i ? (i.minStock || 0) : 0;
+        csv+=`${r.type||'IN'};${formatDate(r.date)};${r.time};${r.user};${r.supplier};${r.note};${r.product};${r.barcode};${r.qtyIst};${r.status};${r.location};${m}\n`;
+    });
+    const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+    a.download="buchungs_historie.csv"; a.click();
+    logAudit("EXPORT","CSV exportiert.");
+});
+
+window.showDetails = (id) => {
+    const r = state.records.find(x=>x.id===id);
+    if(!r) return;
+    
+    const sup = state.masterSuppliers.find(s=>s.name===r.supplier);
+    let supInfo = r.supplier || '-';
+    if(sup) supInfo += ` <span style="color:var(--text-muted);font-size:0.8rem;">(${sup.contact || ''} | ${sup.phone || ''})</span>`;
+
+    let html = `
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">
+            <div><b>Vorgangs-ID:</b> <br><code style="font-size:0.8rem;">${r.id}</code></div>
+            <div><b>Lieferschein:</b> <br>${r.note}</div>
+            <div><b>Datum / Zeit:</b> <br>${formatDate(r.date)} ${r.time||''}</div>
+            <div><b>Bearbeiter:</b> <br>${r.user}</div>
+            <div style="grid-column: 1 / -1;"><b>IT-Lieferant:</b> <br>${supInfo}</div>
+        </div>
+    `;
+    
+    if(r.qaDetails) {
+        html += `<div style="background:rgba(220,38,38,0.05); border:1px solid rgba(220,38,38,0.2); padding:12px; border-radius:8px; margin-top:16px;">
+            <b style="color:var(--danger);display:block;margin-bottom:8px;"><i class="fas fa-exclamation-triangle"></i> Erfasster Mangel:</b>
+            <b>Art:</b> ${r.qaDetails.type}<br>
+            <b>Notiz:</b> ${r.qaDetails.notes || '<i>Keine Notiz</i>'}
+        `;
+        if(r.qaDetails.photo) {
+            html += `<img src="${r.qaDetails.photo}" class="detail-img" alt="Beweisfoto">`;
+        }
+        html += `</div>`;
+    }
+    document.getElementById('details-content').innerHTML = html;
+    document.getElementById('detailsModal').classList.remove('hidden');
+};
+
+window.showDetailsInv = (barcode) => {
+    const r = state.records.find(x=>x.barcode===barcode && x.type==='IN');
+    if(r) {
+        showDetails(r.id); 
+    } else {
+        alert("Für diesen Barcode wurde kein ursprüngliches Eingangsprotokoll gefunden (z.B. weil es manuell migriert wurde).");
+    }
+};
+
+window.sendComplaint = (recordId) => {
+    const r = state.records.find(x=>x.id===recordId);
+    const sup = state.masterSuppliers.find(s=>s.name===r.supplier);
+    
+    const targetEmail = (sup && sup.email) ? sup.email : "einkauf@ihrefirma.de";
+    
+    let qaText = "Ware defekt bei Lieferung.";
+    if(r.qaDetails) {
+        qaText = `Wir reklamieren folgenden Mangel:%0A- Art des Mangels: ${r.qaDetails.type}%0A- Fehlerbeschreibung: ${r.qaDetails.notes}`;
+    }
+    
+    const subject = `Reklamation zu Lieferschein ${r.note} - Artikel: ${r.product}`;
+    const body = `Sehr geehrte Damen und Herren,%0A%0Ahiermit reklamieren wir die Lieferung vom ${formatDate(r.date)} (Ihre Lieferschein-Nr: ${r.note}).%0A%0AArtikel: ${r.product} (Barcode/SN: ${r.barcode})%0A%0A${qaText}%0A%0ABitte setzen Sie sich bezüglich einer Ersatzlieferung oder Gutschrift zeitnah mit uns in Verbindung.%0A%0AMit freundlichen Grüßen%0A%0A${state.currentUser.email}%0A(Logistikabteilung)`;
+    
+    const mailLink = document.createElement('a');
+    mailLink.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+    mailLink.target = '_blank';
+    mailLink.click();
+    
+    logAudit("REKLAMATION", `E-Mail-Prozess für ${r.product} an ${targetEmail} gestartet.`);
+};
+
+window.reorderItem = (barcode) => {
+    const inv = state.inventory.find(i=>i.barcode===barcode);
+    if(!inv) return;
+    
+    const sup = state.masterSuppliers.find(s=>s.name===inv.supplier);
+    
+    if(sup && sup.orderUrl && sup.orderUrl.includes('http')) {
+        window.open(sup.orderUrl, '_blank');
+        logAudit("NACHBESTELLUNG", `Webshop für ${inv.product} geöffnet.`);
+    } else {
+        const targetEmail = (sup && sup.email) ? sup.email : "einkauf@ihrefirma.de";
+        const subject = `Nachbestellung erforderlich: ${inv.product}`;
+        const body = `Hallo,%0A%0Abitte folgenden Artikel aus dem Warenbestand nachbestellen:%0A%0AArtikel: ${inv.product}%0AIT-Lieferant: ${inv.supplier || 'Unbekannt'}%0ABarcode/SN: ${inv.barcode}%0AAktueller Bestand: ${inv.qty} Stk.%0A%0ABenötigte Menge: _____ Stk.%0A%0AViele Grüße%0A${state.currentUser.email}`;
+        
+        const mailLink = document.createElement('a');
+        mailLink.href = `mailto:${targetEmail}?subject=${subject}&body=${body}`;
+        mailLink.target = '_blank';
+        mailLink.click();
+        
+        logAudit("NACHBESTELLUNG", `Bestell-Mail für ${inv.product} vorbereitet.`);
+    }
+};
+
+// ─── KI ASSISTENT LOGIK ──────────────────────────────────────────────────────
+const GEMINI_API_KEY = "AIzaSyCNoqrtk4mjy3wPvRqRlSl3Kp9h0N5WvLo"; // <--- HIER DEINEN SCHLÜSSEL EINTRAGEN
+
+document.getElementById("aiChatToggle").addEventListener("click", () => {
+    document.getElementById("aiChatWindow").classList.remove("hidden");
+    document.getElementById("aiChatToggle").style.transform = "scale(0)";
+});
+document.getElementById("aiChatClose").addEventListener("click", () => {
+    document.getElementById("aiChatWindow").classList.add("hidden");
+    document.getElementById("aiChatToggle").style.transform = "scale(1)";
+});
+
+document.getElementById("aiChatSend").addEventListener("click", sendAiMessage);
+document.getElementById("aiChatInput").addEventListener("keypress", (e) => { if(e.key === 'Enter') sendAiMessage(); });
+
+function sendAiMessage() {
+    const input = document.getElementById("aiChatInput");
+    const msg = input.value.trim().toLowerCase();
+    
+    if(!msg) return;
+    
+    input.value = "";
+    appendChatMessage(msg, 'user');
+    const typingId = appendChatMessage("Analysiere Datenbank...", 'ai'); 
+
+    setTimeout(() => {
+        document.getElementById(typingId).remove();
+        let aiText = "";
+
+        // Hilfs-Array für die intelligente Suche (Wörter über 2 Buchstaben)
+        const searchWords = msg.split(" ").filter(w => w.length > 2);
+
+        // 1. Begrüßung
+        if (msg === "hallo" || msg === "hi" || msg === "moin" || msg === "hey") {
+            aiText = "Hallo! Ich bin dein LogiTrack-Assistent. Du kannst mich nach dem Gesamtbestand, detaillierten Artikel-Infos, Lieferanten-Daten, kritischen Beständen oder der Buchungshistorie fragen!";
+        }
+        // 2. Spezifischer Lieferant & dessen Artikel (SEHR DETAILLIERT)
+        else if (state.masterSuppliers.some(s => msg.includes(s.name.toLowerCase()))) {
+            const supplier = state.masterSuppliers.find(s => msg.includes(s.name.toLowerCase()));
+            const supItems = state.inventory.filter(i => i.supplier === supplier.name && i.qty > 0);
+            
+            let details = `**Lieferanten-Akte: ${supplier.name}**<br>`;
+            details += `👤 Ansprechpartner: ${supplier.contact || '*Nicht hinterlegt*'}<br>`;
+            details += `✉️ E-Mail: ${supplier.email || '*Nicht hinterlegt*'}<br>`;
+            details += `📞 Tel: ${supplier.phone || '*Nicht hinterlegt*'}<br>`;
+            details += `🌐 Webshop: ${supplier.orderUrl ? `<a href="${supplier.orderUrl}" target="_blank" style="color:var(--accent)">Link öffnen</a>` : '*Nicht hinterlegt*'}<br><br>`;
+            
+            if (supItems.length > 0) {
+                details += `**📦 Unser Lagerbestand von diesem Lieferanten:**<br>• ` + supItems.map(i => `${i.qty}x ${i.product} (Lagerort: ${i.location})`).join("<br>• ");
+            } else {
+                details += `*Aktuell haben wir keinen aktiven Bestand von diesem Lieferanten im Lager.*`;
+            }
+            aiText = details;
+        }
+        // 3. Alle Lieferanten in der Übersicht
+        else if (msg.includes("lieferant") || msg.includes("kontakt") || msg.includes("partner")) {
+            if (state.masterSuppliers && state.masterSuppliers.length > 0) {
+                let list = state.masterSuppliers.map(s => `**${s.name}** (ASP: ${s.contact || '-'})`).join("<br>• ");
+                aiText = "Wir haben folgende IT-Lieferanten im System:<br><br>• " + list + "<br><br>*Tipp: Nenne den Namen eines Lieferanten (z.B. 'Zeig mir die Daten von Dell'), um alle Details und zugehörige Artikel zu sehen!*";
+            } else {
+                aiText = "Aktuell sind leider keine Lieferanten in den Stammdaten hinterlegt.";
+            }
+        }
+        // 4. Historie / Letzte Buchungen
+        else if (msg.includes("historie") || msg.includes("letzte") || msg.includes("buchung") || msg.includes("heute")) {
+            if(state.records.length > 0) {
+                const lastRecords = state.records.slice(0, 4); // Zeigt die letzten 4 Buchungen
+                aiText = "**Die letzten System-Buchungen:**<br><br>" + lastRecords.map(r => {
+                    const icon = r.type === 'IN' ? '📥 Eingang' : '📤 Ausgang';
+                    return `• ${icon}: **${r.qtyIst}x ${r.product}** am ${r.date.split('-').reverse().join('.')} (Mitarbeiter: ${r.user})`;
+                }).join("<br><br>");
+            } else {
+                aiText = "Es gibt noch keine Buchungshistorie in der Datenbank.";
+            }
+        }
+        // 5. Kritischer Bestand & Leerstand
+        else if (msg.includes("kritisch") || msg.includes("wenig") || msg.includes("nachbestellen") || msg.includes("leer") || msg.includes("fehlt") || msg.includes("mindestbestand")) {
+            const crit = state.inventory.filter(i => i.qty <= (i.minStock || 0) && i.qty > 0);
+            const empty = state.inventory.filter(i => i.qty === 0);
+            
+            let textParts = [];
+            if(crit.length > 0) {
+                textParts.push("**⚠️ Kritischer Bestand (Unter Minimum):**<br>• " + crit.map(i => `${i.product}: **${i.qty} Stk** (Min: ${i.minStock || 0})`).join("<br>• "));
+            }
+            if(empty.length > 0) {
+                textParts.push("**❌ Komplett leer (0 Bestand):**<br>• " + empty.map(i => `${i.product}`).join("<br>• "));
+            }
+            
+            if(textParts.length > 0) {
+                aiText = "Folgende Artikel erfordern Aufmerksamkeit:<br><br>" + textParts.join("<br><br>") + "<br><br>*Nutze den Button 'Nachbestellen' in der Inventar-Tabelle, um direkt beim Lieferanten zu ordern.*";
+            } else {
+                aiText = "Super! Alle Artikel sind im grünen Bereich. Kein Mindestbestand unterschritten.";
+            }
+        }
+        // 6. Sperrlager / Defekte
+        else if (msg.includes("sperrlager") || msg.includes("quarantäne") || msg.includes("defekt") || msg.includes("mangel") || msg.includes("kaputt") || msg.includes("reklamation")) {
+            const issues = state.inventory.filter(i => i.location === "Sperrlager");
+            if (issues.length > 0) {
+                aiText = `**⚠️ Sperrlager-Bericht:**<br><br>• ` + issues.map(i => `**${i.qty}x ${i.product}**<br>  Barcode: ${i.barcode}<br>  Lieferant: ${i.supplier || 'Unbekannt'}`).join("<br><br>• ") + "<br><br>Du kannst über die Historie direkt eine Reklamations-E-Mail generieren.";
+            } else {
+                aiText = "Gute Nachrichten: Das Sperrlager ist komplett leer. Keine defekten Artikel verzeichnet!";
+            }
+        }
+        // 7. Detaillierte Artikelsuche (Produktname oder Barcode)
+        else if (searchWords.some(w => state.inventory.some(i => i.product.toLowerCase().includes(w) || i.barcode.toLowerCase().includes(w)))) {
+            let foundItems = state.inventory.filter(i => 
+                searchWords.some(w => i.product.toLowerCase().includes(w) || i.barcode.toLowerCase().includes(w))
+            );
+
+            if (foundItems.length > 0) {
+                let list = foundItems.map(i => {
+                    let status = i.qty > 0 ? `<span style="color:#059669">${i.qty} Stück verfügbar</span>` : `<span style="color:#dc2626">Ausverkauft (0 Stück)</span>`;
+                    return `**${i.product}**<br>  📦 Status: ${status}<br>  📍 Ort: ${i.location}<br>  🆔 Barcode: ${i.barcode}<br>  🚚 Lieferant: ${i.supplier || 'Unbekannt'}<br>  📊 Min-Bestand: ${i.minStock || 0}`;
+                }).join("<br><br>• ");
+                aiText = `**Detail-Analyse zu deiner Suchanfrage:**<br><br>• ${list}`;
+            }
+        }
+        // 8. Gesamtbestand
+        else if (msg.includes("bestand") || msg.includes("alles") || msg.includes("gesamt") || msg.includes("was") || msg.includes("lager")) {
+            const available = state.inventory.filter(i => i.qty > 0);
+            if (available.length > 0) {
+                const totalItems = available.reduce((sum, i) => sum + i.qty, 0);
+                let list = available.map(i => `**${i.qty}x** ${i.product} *(Fach: ${i.location})*`).join("<br>• ");
+                aiText = `Wir haben aktuell **${totalItems} Artikel** im gebuchten Bestand.<br><br>Hier ist die Detailansicht:<br><br>• ${list}`;
+            } else {
+                aiText = "Unser Lager ist momentan komplett leer. Es gibt keinen aktiven Bestand.";
+            }
+        } 
+        // 9. Fallback bei unbekannten Fragen
+        else {
+            aiText = "Das habe ich im Kontext unserer Datenbank nicht genau gefunden. Frag mich zum Beispiel:<br><br>• *'Zeig mir die Akte vom Lieferanten Bechtle'*<br>• *'Welche Artikel liegen im Sperrlager?'*<br>• *'Was waren die letzten Buchungen?'*<br>• *'Zeig mir die Details zu [Artikelname/Barcode]'*";
+        }
+
+        appendChatMessage(aiText, 'ai');
+    }, 1200);
+}
+
+function appendChatMessage(text, sender) {
+    const history = document.getElementById("aiChatHistory");
+    const msgDiv = document.createElement("div");
+    const id = "msg-" + Date.now();
+    msgDiv.id = id;
+    msgDiv.style.maxWidth = "85%";
+    msgDiv.style.padding = "10px 14px";
+    msgDiv.style.fontSize = "0.875rem";
+    msgDiv.style.lineHeight = "1.4";
+    
+    if(sender === 'user') {
+        msgDiv.style.alignSelf = "flex-end";
+        msgDiv.style.background = "var(--accent)";
+        msgDiv.style.color = "#fff";
+        msgDiv.style.borderRadius = "12px 12px 0 12px";
+    } else {
+        msgDiv.style.alignSelf = "flex-start";
+        msgDiv.style.background = "var(--card-bg)";
+        msgDiv.style.color = "var(--text-main)";
+        msgDiv.style.borderRadius = "12px 12px 12px 0";
+        msgDiv.style.border = "1px solid var(--border)";
+        msgDiv.style.boxShadow = "var(--shadow)";
+    }
+    
+    // Einfache Formatierung für fettgedruckten Text (KI nutzt oft **text**)
+    const formattedText = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    msgDiv.innerHTML = formattedText;
+    
+    history.appendChild(msgDiv);
+    history.scrollTop = history.scrollHeight;
+    return id;
+}
+
 </script>
-
 </body>
 </html>
